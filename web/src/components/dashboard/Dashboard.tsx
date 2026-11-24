@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState, type ComponentType } from "react";
 import {
-  Activity, AlertTriangle, ChevronDown, Download, Flag, Gauge, Globe, LayoutDashboard, Moon, MoreHorizontal, PackageX, ShieldCheck,
+  Activity, AlertTriangle, ChevronDown, Download, Flag, Gauge, Globe, LayoutDashboard, Moon, MoreHorizontal, PackageX, PanelLeft, ShieldCheck,
   ShoppingCart, SlidersHorizontal, Sparkles, Sprout, Sun, TrendingUp, X, type LucideIcon,
 } from "lucide-react";
 import { DashboardProvider, DIMS, useDashboard } from "./DashboardContext";
@@ -153,7 +153,7 @@ function TabNav({ tab, onTab }: { tab: TabId; onTab: (t: TabId) => void }) {
 }
 
 function Main({ tab, onTab }: { tab: TabId; onTab: (t: TabId) => void }) {
-  const { names, data, config, setFilter, dimLabel } = useDashboard();
+  const { names, data, config, setFilter, dimLabel, sidebarCollapsed, toggleSidebar } = useDashboard();
   const { mode, toggle } = useTheme(config.theme.mode);
   const View = VIEWS[tab];
   const label = TABS.find((t) => t.id === tab)?.label;
@@ -165,6 +165,14 @@ function Main({ tab, onTab }: { tab: TabId; onTab: (t: TabId) => void }) {
       <header className="glass sticky top-0 z-20 border-b">
         <div className="flex items-center justify-between gap-3 px-4 pt-3 pb-2 sm:px-6">
           <div className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
+            <button
+              onClick={toggleSidebar}
+              aria-label={sidebarCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
+              title={sidebarCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
+              className="hidden lg:inline-flex size-7 items-center justify-center rounded-lg border border-border bg-card/70 text-muted-foreground transition-all hover:bg-card hover:text-foreground hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <PanelLeft className="size-3.5" aria-hidden />
+            </button>
             <span className="truncate">{brand.name}</span>
             <span aria-hidden>/</span>
             <span className="truncate font-medium text-foreground">{label}</span>

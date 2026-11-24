@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Engine, type MonthPoint, type SeriesStat } from "@/lib/engine";
 import type { AppConfig } from "@/lib/config";
 import { EMPTY_FILTERS, type Dataset, type DimKey, type Filters } from "@/lib/types";
@@ -37,6 +37,9 @@ interface Ctx {
   /** Does a name-keyed JSON row fall inside the shared filters? Null fields mean "applies to all". */
   matchRow: (r: NamedRow) => boolean;
   familyOfSku: (sku: string | null | undefined) => string | null;
+  sidebarCollapsed: boolean;
+  setSidebarCollapsed: (c: boolean | ((prev: boolean) => boolean)) => void;
+  toggleSidebar: () => void;
 }
 
 const DashboardCtx = createContext<Ctx | null>(null);
@@ -98,9 +101,85 @@ export function DashboardProvider({ data, config, children }: { data: Dataset; c
   const horizon = data.cube.months.length - 1 - data.cube.last_hist;
   const dimLabel = useCallback((dim: DimKey) => config.dimension_labels[dim] ?? DIMS.find((d) => d.key === dim)?.label ?? dim, [config]);
 
+  const [sidebarCollapsed, setSidebarCollapsedState] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return localStorage.getItem("mks_sidebar_collapsed") === "true";
+      } catch {
+        return false;
+      }
+    }
+    return false;
+  });
+
+  const setSidebarCollapsed = useCallback((val: boolean | ((prev: boolean) => boolean)) => {
+    setSidebarCollapsedState((prev) => {
+      const next = typeof val === "function" ? val(prev) : val;
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("mks_sidebar_collapsed", String(next));
+        } catch {
+          // ignore
+        }
+      }
+      return next;
+    });
+  }, []);
+
+  const toggleSidebar = useCallback(() => {
+    setSidebarCollapsed((prev) => !prev);
+  }, [setSidebarCollapsed]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
+        e.preventDefault();
+        toggleSidebar();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [toggleSidebar]);
+
   const value = useMemo<Ctx>(
-    () => ({ data, config, horizon, dimLabel, engine, filters, names, setFilter, reset, mask, pts, stats, matchRow, familyOfSku }),
-    [data, config, horizon, dimLabel, engine, filters, names, setFilter, reset, mask, pts, stats, matchRow, familyOfSku],
+    () => ({
+      data,
+      config,
+      horizon,
+      dimLabel,
+      engine,
+      filters,
+      names,
+      setFilter,
+      reset,
+      mask,
+      pts,
+      stats,
+      matchRow,
+      familyOfSku,
+      sidebarCollapsed,
+      setSidebarCollapsed,
+      toggleSidebar,
+    }),
+    [
+      data,
+      config,
+      horizon,
+      dimLabel,
+      engine,
+      filters,
+      names,
+      setFilter,
+      reset,
+      mask,
+      pts,
+      stats,
+      matchRow,
+      familyOfSku,
+      sidebarCollapsed,
+      setSidebarCollapsed,
+      toggleSidebar,
+    ],
   );
   return <DashboardCtx.Provider value={value}>{children}</DashboardCtx.Provider>;
 }
