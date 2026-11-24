@@ -1,0 +1,10 @@
+[project]
+name = "mks-demand-forecast"
+version = "0.1.0"
+description = "Celeris demand forecasting & planning control tower (MKS AI/ML Hackathon Phase 2)"
+requires-python = ">=3.10"
+[tool.setuptools.packages.find]
+where = ["src"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

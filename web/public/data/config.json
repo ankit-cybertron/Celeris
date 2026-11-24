@@ -1,0 +1,35 @@
+{
+  "brand": {
+    "name": "Celeris",
+    "tagline": "Demand Control Tower"
+  },
+  "default_tab": "executive",
+  "theme": {
+    "mode": "light",
+    "colors": {},
+    "colors_dark": {}
+  },
+  "animation": {
+    "enabled": true,
+    "duration_ms": 700
+  },
+  "dimension_labels": {
+    "family": "Product family",
+    "sku": "SKU",
+    "region": "Region",
+    "channel": "Sales channel",
+    "customer": "Customer"
+  },
+  "what_if": {
+    "indicator": "ISM_Manufacturing_PMI",
+    "shock": -3,
+    "min": -10,
+    "max": 10,
+    "step": 0.5
+  },
+  "exceptions": {
+    "min_change_pct": 30,
+    "min_volume": 500,
+    "max_volume": 20000
+  }
+}

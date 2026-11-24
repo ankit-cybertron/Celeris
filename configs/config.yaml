@@ -1,0 +1,29 @@
+paths:
+  raw: data/raw
+  processed: data/processed
+  outputs: outputs
+history_end: "2026-10"
+forecast_start: "2026-11"
+forecast_end: "2028-05"
+horizon: 19
+cleaning:
+  unit_scale_factors: [0.01, 0.1, 10.0]   # Revenue/(Units*Price) ratios treated as scale errors
+  price_tolerance: [0.8, 1.2]             # row price / SKU-month reference price considered "normal"
+anomaly:
+  spike_ratio: 4.0                        # Units / local 13m median above which a point is a spike
+  spike_cap_ratio: 3.0                    # spikes capped to this multiple of local median for model training
+  lost_account_months: 6
+model:
+  seed: 42
+  n_estimators: 400
+  learning_rate: 0.05
+  num_leaves: 63
+  min_child_samples: 50
+  train_origin_step: 3
+  train_origin_start: 30
+  backtest_origins: ["2024-04", "2025-03"]
+  quantiles: [0.1, 0.9]
+  bias_calibration: false
+model_exclude_events: [EV-009, EV-010, EV-011, EV-012, EV-013, EV-033, EV-038]   # COVID, LatAm ERP gap, Nexon strike: masked from training signal
+planned_events:                             # forecast-window customer events, multiplier on demand (analog: Nexon strike months ran at 0.18-0.27x, no catch-up)
+  EV-062: {multiplier: 0.22}
