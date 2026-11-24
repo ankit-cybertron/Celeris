@@ -33,6 +33,26 @@ export const DOT = { r: 4, strokeWidth: 2, stroke: "var(--card)" } as const;
 
 export const axisProps = { stroke: "var(--border)", tickLine: false, tick: { fill: "var(--muted-foreground)", fontSize: 11 } } as const;
 
+export function shortCategoryLabel(v: string): string {
+  if (!v) return "";
+  const map: Record<string, string> = {
+    "Brake & Safety Systems": "Brake & Safety",
+    "Chassis & Structural": "Chassis & Struct",
+    "Electrical Assemblies": "Electrical",
+    "Hydraulic Systems": "Hydraulics",
+    "Precision Machined Parts": "Precision Mach",
+    "Powertrain Components": "Powertrain",
+    "Thermal Management": "Thermal Mgmt",
+    "Middle East & Africa": "Middle East",
+    "North America": "North America",
+    "Latin America": "Latin America",
+    "Asia Pacific": "Asia Pacific",
+  };
+  if (map[v]) return map[v];
+  if (v.length > 14) return `${v.slice(0, 13)}…`;
+  return v;
+}
+
 export function TipBox({ title, children }: { title?: ReactNode; children: ReactNode }) {
   return (
     <div className="max-w-xs rounded-xl border bg-popover/85 px-3 py-2 text-xs text-popover-foreground shadow-xl backdrop-blur-md">

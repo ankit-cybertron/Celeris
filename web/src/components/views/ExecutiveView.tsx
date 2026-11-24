@@ -3,21 +3,30 @@ import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useDashboard, selectionLabel } from "@/components/dashboard/DashboardContext";
 import { Delta, Kpi, KpiGrid, Panel, Segmented } from "@/components/dashboard/ui";
-import { axisProps, C, GenericTip, Timeline, timelineRows, type Mode } from "@/components/dashboard/charts";
+import { axisProps, C, GenericTip, shortCategoryLabel, Timeline, timelineRows, type Mode } from "@/components/dashboard/charts";
 import { growthPct, sumRange } from "@/lib/engine";
 import { fmtMoney, fmtNum } from "@/lib/format";
 import type { DimKey } from "@/lib/types";
 
-export function MixChart({ rows, height = 240 }: { rows: Array<{ key: string; last12: number; next12: number }>; height?: number }) {
+export function MixChart({ rows, height = 270 }: { rows: Array<{ key: string; last12: number; next12: number }>; height?: number }) {
   return (
     <div style={{ height }}>
       <ResponsiveContainer>
-        <BarChart data={rows} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
+        <BarChart data={rows} margin={{ top: 8, right: 8, bottom: 28, left: 12 }}>
           <CartesianGrid stroke={C.grid} strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="key" {...axisProps} interval={0} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} tickFormatter={(v: string) => (v.length > 11 ? `${v.slice(0, 10)}…` : v)} />
-          <YAxis tickFormatter={(v: number) => fmtNum(v, 0)} width={48} {...axisProps} />
+          <XAxis
+            dataKey="key"
+            {...axisProps}
+            interval={0}
+            angle={-35}
+            textAnchor="end"
+            height={52}
+            tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
+            tickFormatter={shortCategoryLabel}
+          />
+          <YAxis tickFormatter={(v: number) => fmtNum(v, 0)} width={44} {...axisProps} />
           <Tooltip content={<GenericTip />} cursor={{ fill: "var(--muted)" }} />
-          <Legend iconSize={10} wrapperStyle={{ fontSize: 11 }} />
+          <Legend iconSize={10} wrapperStyle={{ fontSize: 11, paddingTop: 10 }} />
           <Bar dataKey="last12" name="Last 12m (history)" fill={C.history} radius={[3, 3, 0, 0]} {...chartAnim()} />
           <Bar dataKey="next12" name="Next 12m (forecast)" fill={C.forecast} radius={[3, 3, 0, 0]} {...chartAnim()} />
         </BarChart>

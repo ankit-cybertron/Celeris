@@ -162,12 +162,22 @@ export function AnomalyView() {
 
 function SmallBars<T extends Record<string, unknown>>({ data, x, y, colorOf }: { data: T[]; x: string; y: string; colorOf: (d: T) => string }) {
   if (!data.length) return <Empty />;
+  const isType = x === "type";
   return (
-    <div className="h-56">
+    <div className={isType ? "h-64" : "h-56"}>
       <ResponsiveContainer>
-        <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+        <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: isType ? 20 : 0 }}>
           <CartesianGrid stroke={C.grid} strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey={x} {...axisProps} interval={0} />
+          <XAxis
+            dataKey={x}
+            {...axisProps}
+            interval={0}
+            angle={isType ? -30 : 0}
+            textAnchor={isType ? "end" : "middle"}
+            height={isType ? 45 : undefined}
+            tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
+            tickFormatter={(v: string) => String(v).replace(/_/g, " ")}
+          />
           <YAxis allowDecimals={false} width={32} {...axisProps} />
           <Tooltip content={<GenericTip />} cursor={{ fill: "var(--muted)" }} />
           <Bar dataKey={y} name="Anomalies" radius={[3, 3, 0, 0]} {...chartAnim()} shape={(p: unknown) => {

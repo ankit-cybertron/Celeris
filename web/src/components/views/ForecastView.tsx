@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, ComposedChart, Legend, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useDashboard, selectionLabel } from "@/components/dashboard/DashboardContext";
 import { Kpi, KpiGrid, MissingFile, Panel, SortableTable } from "@/components/dashboard/ui";
-import { axisProps, C, Timeline, timelineRows, TipBox, TipRow } from "@/components/dashboard/charts";
+import { axisProps, C, shortCategoryLabel, Timeline, timelineRows, TipBox, TipRow } from "@/components/dashboard/charts";
 import { intervalLevel } from "@/lib/engine";
 import { isNaive, methodSummary, pivotDim, primaryMethod } from "@/lib/backtest";
 import { fmtRatio } from "@/lib/format";
@@ -79,14 +79,23 @@ export function ForecastView() {
           ["By sales channel", derived.ch, names.channel],
         ] as const).map(([title, piv, sel]) => (
           <Panel key={title} title={title} subtitle={sel ? `Highlighting ${sel}` : "WAPE, model vs seasonal naive"}>
-            <div className="h-56">
+            <div className="h-72">
               <ResponsiveContainer>
-                <BarChart data={piv.rows} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+                <BarChart data={piv.rows} margin={{ top: 8, right: 8, left: 12, bottom: 28 }}>
                   <CartesianGrid stroke={C.grid} strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="key" {...axisProps} interval={0} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} tickFormatter={(v: string) => (v.length > 11 ? `${v.slice(0, 10)}…` : v)} />
+                  <XAxis
+                    dataKey="key"
+                    {...axisProps}
+                    interval={0}
+                    angle={-35}
+                    textAnchor="end"
+                    height={52}
+                    tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
+                    tickFormatter={shortCategoryLabel}
+                  />
                   <YAxis tickFormatter={(v: number) => fmtRatio(v, 0)} width={40} {...axisProps} />
                   <Tooltip content={<RatioTip />} cursor={{ fill: "var(--muted)" }} />
-                  <Legend iconSize={10} wrapperStyle={{ fontSize: 11 }} />
+                  <Legend iconSize={10} wrapperStyle={{ fontSize: 11, paddingTop: 10 }} />
                   {piv.methods.map((m) => (
                     <Bar key={m} dataKey={m} name={m} fill={methodColor(m)} radius={[3, 3, 0, 0]} {...chartAnim()}>
                       {piv.rows.map((r, i) => <Cell key={i} fillOpacity={!sel || r["key"] === sel ? 1 : 0.3} />)}
