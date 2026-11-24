@@ -1,0 +1,25 @@
+.venv/bin/python -m mks.cli clean
+== clean ==
+{'error': 22457, 'info': 2925, 'warning': 18709}
+   clean done in 7s
+.venv/bin/python -m mks.cli anomalies
+== anomalies ==
+   anomalies done in 5s
+.venv/bin/python -m mks.cli backtest
+== backtest ==
+origin 2024-04: rows 55829  WAPE snaive 0.359  lvl*seas 0.320  tsb 0.493  croston 0.500  lgbm 0.278  bias -0.119
+origin 2025-03: rows 57197  WAPE snaive 0.369  lvl*seas 0.321  tsb 0.495  croston 0.492  lgbm 0.293  bias +0.050
+   backtest done in 50s
+.venv/bin/python -m mks.cli forecast
+== forecast ==
+training rows 969369, features 66
+submission rows 58219; total P50 units 2,738,798; monthly mean 144,147
+history monthly mean last 12m: 142,212
+   forecast done in 58s
+.venv/bin/python -m mks.cli insights
+== insights ==
+   insights done in 1s
+.venv/bin/python -m mks.cli export
+== export ==
+exported to web/public/data {'cube.json': 8.64, 'anomalies.json': 2.72, 'insights.json': 0.05, 'config.json': 0.0, 'stockouts.json': 1.42, 'submission.csv': 1.83, 'lifecycle.json': 0.15, 'dq.json': 0.0, 'exceptions.json': 0.06, 'backtest.json': 0.01, 'profile.json': 0.46, 'meta.json': 0.0}
+   export done in 6s

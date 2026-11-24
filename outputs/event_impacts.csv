@@ -1,0 +1,53 @@
+event_id,type,scope,start,end,description,units_observed,units_expected,impact_pct
+EV-002,Holiday,Region:Asia Pacific,2019-02,2019-02,Lunar New Year holiday period,14815.0,24159.666666666668,-38.6787897184012
+EV-003,Holiday,Region:Middle East & Africa,2019-05,2019-06,Ramadan,0.0,,
+EV-004,Holiday,Region:North America,2019-07,2019-07,North American summer retooling weeks,15429.0,25800.25,-40.19825389288864
+EV-005,Holiday,Region:Europe,2019-08,2019-08,European summer plant shutdowns,10421.0,24922.75,-58.186797203358374
+EV-008,Holiday,Region:Asia Pacific,2020-01,2020-02,Lunar New Year holiday period,30403.0,41143.0,-26.10407602751379
+EV-009,Disruption,Region:Asia Pacific,2020-02,2020-03,COVID-19 lockdowns and plant closures,27885.0,43109.5,-35.315881650216305
+EV-010,Disruption,Region:Europe,2020-03,2020-05,COVID-19 lockdowns and plant closures,34479.0,85738.0,-59.78562597681309
+EV-011,Disruption,Region:India,2020-04,2020-06,COVID-19 lockdowns and plant closures,18126.0,74921.0,-75.8065161970609
+EV-012,Disruption,Region:Latin America,2020-04,2020-06,COVID-19 lockdowns and plant closures,29538.0,69659.0,-57.59629050086852
+EV-013,Disruption,Region:North America,2020-04,2020-06,COVID-19 lockdowns and plant closures,31423.0,85593.5,-63.2881001477916
+EV-014,Holiday,Region:Middle East & Africa,2020-04,2020-05,Ramadan,0.0,,
+EV-015,Holiday,Region:North America,2020-07,2020-07,North American summer retooling weeks,9969.0,16031.25,-37.81520467836257
+EV-016,Holiday,Region:Europe,2020-08,2020-08,European summer plant shutdowns,8178.0,19365.0,-57.76917118512781
+EV-018,Holiday,Region:Asia Pacific,2021-02,2021-02,Lunar New Year holiday period,16561.0,28704.0,-42.30420847268673
+EV-019,Supply Constraint,Product_Family:Electrical Assemblies,2021-03,2022-09,Global semiconductor shortage - Celeris shipments allocated below customer demand,155567.0,173217.0,-10.18953105064745
+EV-020,Holiday,Region:Middle East & Africa,2021-04,2021-05,Ramadan,0.0,,
+EV-021,Holiday,Region:North America,2021-07,2021-07,North American summer retooling weeks,19831.0,30384.0,-34.73209583991574
+EV-022,Holiday,Region:Europe,2021-08,2021-08,European summer plant shutdowns,12994.0,28505.75,-54.416214272559046
+EV-024,Market Entry,Region:Middle East & Africa,2022-01,2022-01,Celeris opens Middle East & Africa sales region,1508.0,9734.0,-84.50791041709472
+EV-025,Holiday,Region:Asia Pacific,2022-02,2022-02,Lunar New Year holiday period,14309.0,22839.25,-37.34908107753101
+EV-026,Holiday,Region:Middle East & Africa,2022-04,2022-05,Ramadan,10308.0,11026.5,-6.516120255747515
+EV-028,Holiday,Region:North America,2022-07,2022-07,North American summer retooling weeks,14655.0,25598.5,-42.75055179014395
+EV-029,Holiday,Region:Europe,2022-08,2022-08,European summer plant shutdowns,11367.0,24646.0,-53.87892558630203
+EV-032,Holiday,Region:Asia Pacific,2023-01,2023-01,Lunar New Year holiday period,17639.0,23926.5,-26.278394249054394
+EV-033,System,Region:Latin America,2023-03,2023-05,ERP migration in Latin America - some transactions were not migrated,50300.0,66263.0,-24.09036717323393
+EV-034,Holiday,Region:Middle East & Africa,2023-03,2023-04,Ramadan,20181.0,21756.5,-7.241514030289798
+EV-036,Holiday,Region:North America,2023-07,2023-07,North American summer retooling weeks,15813.0,27002.0,-41.43767128360862
+EV-037,Holiday,Region:Europe,2023-08,2023-08,European summer plant shutdowns,11828.0,26049.0,-54.593266536143425
+EV-038,Customer Event,Customer:Nexon Motor Group | Europe,2023-10,2023-11,Labour strike at Nexon Motor Group European assembly plants,1138.0,6007.5,-81.05701206824803
+EV-039,Logistics,Channel:Export,2024-01,2024-03,Red Sea shipping disruption delays export shipments to Europe and MEA,20158.0,22639.0,-10.958964618578559
+EV-041,Holiday,Region:Asia Pacific,2024-02,2024-02,Lunar New Year holiday period,16533.0,25459.75,-35.06220603108828
+EV-042,Holiday,Region:Middle East & Africa,2024-03,2024-04,Ramadan,24942.0,23230.0,7.369780456306496
+EV-044,Holiday,Region:North America,2024-07,2024-07,North American summer retooling weeks,17151.0,29499.0,-41.859046069358286
+EV-045,Holiday,Region:Europe,2024-08,2024-08,European summer plant shutdowns,13751.0,30380.75,-54.73778626268279
+EV-047,Holiday,Region:Asia Pacific,2025-01,2025-02,Lunar New Year holiday period,47618.0,55270.5,-13.845541473299505
+EV-048,System,Global:All,2025-02,2025-02,CRM platform upgrade,140097.0,121144.0,15.645017499834912
+EV-049,Holiday,Region:Middle East & Africa,2025-03,2025-03,Ramadan,11138.0,14562.0,-23.51325367394589
+EV-050,Holiday,Region:North America,2025-07,2025-07,North American summer retooling weeks,16169.0,27974.5,-42.20093299254678
+EV-051,Holiday,Region:Europe,2025-08,2025-08,European summer plant shutdowns,12791.0,27891.0,-54.139328098669814
+EV-052,Customer Event,Customer:Helios Auto Parts | India,2025-09,,Helios Auto Parts commissions second Indian assembly line (permanent capacity increase),47409.42857142857,39131.0,21.1556785449607
+EV-054,Holiday,Region:Asia Pacific,2026-02,2026-02,Lunar New Year holiday period,16255.0,25633.0,-36.58565130885967
+EV-055,Holiday,Region:Middle East & Africa,2026-02,2026-03,Ramadan,22358.0,25630.5,-12.767991260412403
+EV-056,Holiday,Region:North America,2026-07,2026-07,North American summer retooling weeks,19042.0,29642.25,-35.760611964341436
+EV-057,Holiday,Region:Europe,2026-08,2026-08,European summer plant shutdowns,14015.0,30779.25,-54.466076983682186
+EV-060,Holiday,Region:Asia Pacific,2027-02,2027-02,Lunar New Year holiday period,0.0,,
+EV-061,Holiday,Region:Middle East & Africa,2027-02,2027-03,Ramadan,0.0,,
+EV-062,Customer Event,Customer:Orion Driveline | North America,2027-07,2027-08,Planned retooling shutdown at Orion Driveline North American plants,0.0,6221.0,-100.0
+EV-063,Holiday,Region:North America,2027-07,2027-07,North American summer retooling weeks,0.0,,
+EV-064,Holiday,Region:Europe,2027-08,2027-08,European summer plant shutdowns,0.0,,
+EV-066,Holiday,Region:Asia Pacific,2028-01,2028-02,Lunar New Year holiday period,0.0,,
+EV-067,Holiday,Region:Middle East & Africa,2028-01,2028-02,Ramadan,0.0,,
+EV-068,Holiday,Region:Europe,2028-08,2028-08,European summer plant shutdowns,0.0,,
