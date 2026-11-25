@@ -24,6 +24,8 @@ Industrial supply chains face extreme forecasting challenges characterized by in
 5. **Empirical Quantile Calibration & Bayes Shrinkage:** Replaces heuristic interval clamps with empirical residual distribution scaling derived across dual rolling-origin backtests ($n = 113,026$). Family procurement safety stock buffers apply empirical Bayes shrinkage ($w = n/(n+24)$) to prevent small-sample noise from triggering inventory over-ordering.
 6. **Executive Control Tower (React + TanStack Start):** A 13-view executive dashboard with collapsible desktop rail and mobile drawer (`Ctrl+B`), continuous timeline visualization, empirical risk envelopes ($P_{10}$–$P_{90}$), what-if scenario stress-testing, and automated exception registries.
 
+![Celeris Control Tower - Executive Overview Dashboard](docs/images/dashboard_executive.png)
+
 ---
 
 ## End-to-End Methodology & System Architecture
@@ -82,7 +84,7 @@ The model was rigorously validated using a **leak-free rolling-origin backtest**
 
 All models are evaluated on the exact competition horizon length (**19 months out-of-sample**, $n = 113,026$ evaluated series-months).
 
-![Empirical Model Performance & Validation Benchmarks](docs/benchmark_comparison.png)
+![Celeris Control Tower - Forecast & Accuracy Benchmark View](docs/images/dashboard_forecast_accuracy.png)
 
 ### 1. Overall Forecast Accuracy Benchmark (Row-Level WAPE)
 
@@ -242,6 +244,11 @@ Built as a high-performance, single-page application using **React 19, Vite, Tan
 - **Desktop Rail (`lg:w-72` $\leftrightarrow$ `lg:w-16`):** One-click collapsible sidebar with smooth transitions, providing expanded screen width for complex tabular grids and heatmaps.
 - **Mobile Drawer:** Header-integrated filter toggle collapsing extensive dropdown lists into a clean 52px top bar on small viewports.
 - **Global Shortcut:** Press **`Ctrl+B`** (or **`Cmd+B`**) anywhere to toggle sidebar states.
+
+<p align="center">
+  <img src="docs/images/dashboard_procurement.png" alt="Celeris Procurement & Inventory Planning View" width="49%" />
+  <img src="docs/images/dashboard_demand_explorer.png" alt="Celeris Demand Explorer View" width="49%" />
+</p>
 
 ---
 
