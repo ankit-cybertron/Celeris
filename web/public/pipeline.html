@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Celeris End-to-End Methodology Architecture</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .canvas {
+      width: 1440px;
+      background: #0b1120;
+      border: 1px solid #1e293b;
+      border-radius: 24px;
+      padding: 48px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      position: relative;
+      overflow: hidden;
+    }
+    .canvas::before {
+      content: "";
+      position: absolute;
+      top: -150px;
+      left: -150px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .canvas::after {
+      content: "";
+      position: absolute;
+      bottom: -150px;
+      right: -150px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(249, 115, 22, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 24px;
+      margin-bottom: 36px;
+    }
+    .title-group h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .title-group p {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-top: 6px;
+    }
+    .meta-badges {
+      display: flex;
+      gap: 12px;
+    }
+    .badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #38bdf8;
+    }
+    .badge.orange { color: #fb923c; border-color: #7c2d12; background: #2a1711; }
+    .badge.green { color: #4ade80; border-color: #14532d; background: #0e2a1b; }
+
+    /* Pipeline Grid */
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+      position: relative;
+    }
+
+    /* Cards */
+    .stage-card {
+      background: #131d31;
+      border: 1px solid #24344d;
+      border-radius: 16px;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s ease;
+    }
+    .stage-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .stage-1 .stage-num { background: #0369a1; color: #e0f2fe; }
+    .stage-2 .stage-num { background: #b45309; color: #fef3c7; }
+    .stage-3 .stage-num { background: #6d28d9; color: #ede9fe; }
+    .stage-4 .stage-num { background: #047857; color: #d1fae5; }
+    .stage-5 .stage-num { background: #be185d; color: #fce7f3; }
+
+    .stage-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 8px;
+    }
+    .stage-desc {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      min-height: 36px;
+    }
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+    .step-item {
+      background: #0d1526;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 11.5px;
+      line-height: 1.4;
+    }
+    .step-item strong {
+      display: block;
+      color: #e2e8f0;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    .step-item span {
+      color: #94a3b8;
+      display: block;
+    }
+    .step-stat {
+      margin-top: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .stage-2 .step-stat { color: #fb923c; }
+    .stage-3 .step-stat { color: #c084fc; }
+    .stage-4 .step-stat { color: #4ade80; }
+    .stage-5 .step-stat { color: #f472b6; }
+
+    /* Flow connector arrows */
+    .connector {
+      position: absolute;
+      right: -13px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      font-size: 12px;
+      z-index: 10;
+    }
+
+    /* Bottom Results Panel */
+    .results-banner {
+      margin-top: 32px;
+      background: linear-gradient(135deg, #111b2f 0%, #172554 100%);
+      border: 1px solid #1d4ed8;
+      border-radius: 16px;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .results-kpis {
+      display: flex;
+      gap: 48px;
+    }
+    .kpi-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .kpi-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #93c5fd;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .kpi-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: #ffffff;
+      font-variant-numeric: tabular-nums;
+    }
+    .kpi-sub {
+      font-size: 11px;
+      color: #cbd5e1;
+      margin-top: 2px;
+    }
+    .results-tag {
+      text-align: right;
+    }
+    .results-tag .title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #60a5fa;
+    }
+    .results-tag .subtitle {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="header">
+      <div class="title-group">
+        <h1>Celeris: Multi-Horizon Industrial Demand Forecasting & Control Tower</h1>
+        <p>End-to-End Scientific Architecture: Ingestion, Anomaly Rectification, Direct GBDT, Empirical Calibration, & Interactive Control Tower</p>
+      </div>
+      <div class="meta-badges">
+        <span class="badge">600 SKUs × 6 Regions</span>
+        <span class="badge orange">19-Month Horizon</span>
+        <span class="badge green">WAPE 0.286 (Pooled)</span>
+      </div>
+    </div>
+
+    <div class="pipeline-grid">
+      <!-- Stage 1 -->
+      <div class="stage-card stage-1">
+        <div class="connector">→</div>
+        <div class="stage-num">01</div>
+        <div class="stage-title">Data Ingestion & Hygiene</div>
+        <div class="stage-desc">7 raw competition streams with corrupt dates, price slips, and duplicate loads.</div>
+        <div class="step-list">
+          <div class="step-item">
+            <strong>Timestamp Rectification</strong>
+            <span>Parsed 6 date variants; resolved 2062 load glitches via audit logs.</span>
+            <div class="step-stat">✓ 9,967 dates normalized</div>
+          </div>
+          <div class="step-item">
+            <strong>Canonical Normalization</strong>
+            <span>Standardized casing, trailing spaces, and fuzzy customer identity.</span>
+            <div class="step-stat">✓ 5,992 regions, 12 customers</div>
+          </div>
+          <div class="step-item">
+            <strong>Transactional Pricing Fixes</strong>
+            <span>Repaired 10x/100x pricing decimal flips & inverted revenue.</span>
+            <div class="step-stat">✓ 2,545 units recovered</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 2 -->
+      <div class="stage-card stage-2">
+        <div class="connector">→</div>
+        <div class="stage-num">02</div>
+        <div class="stage-title">Unconstrained Demand</div>
+        <div class="stage-desc">Reconstructing true customer demand from censored transactional sales.</div>
+        <div class="step-list">
+          <div class="step-item">
+            <strong>Stockout Reconciliation</strong>
+            <span>Stockout months substituted with Requested Units to reflect true appetite.</span>
+            <div class="step-stat">✓ 1,200+ stockouts solved</div>
+          </div>
+          <div class="step-item">
+            <strong>Allocation Gap Recovery</strong>
+            <span>Estimated unlisted demand during global semiconductor allocation window.</span>
+            <div class="step-stat">✓ Censored volume adjusted</div>
+          </div>
+          <div class="step-item">
+            <strong>NaN vs Zero Distinction</strong>
+            <span>Unobserved series months maintained as NaN; zero reserved strictly for true inactivity.</span>
+            <div class="step-stat">✓ Preserves sparsity signals</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 3 -->
+      <div class="stage-card stage-3">
+        <div class="connector">→</div>
+        <div class="stage-num">03</div>
+        <div class="stage-title">Feature Synthesis</div>
+        <div class="stage-desc">Domain-informed feature engineering capturing multi-scale signals.</div>
+        <div class="step-list">
+          <div class="step-item">
+            <strong>Order Cadence Cycles</strong>
+            <span>Detected customer ordering rhythms, days-since-last-order, and cycle phase.</span>
+            <div class="step-stat">★ Top Feature: cyc_acc (#1)</div>
+          </div>
+          <div class="step-item">
+            <strong>Macro Transfer Functions</strong>
+            <span>Lagged cross-correlations (1–12m) with Regional PMI, Automotive Index, & CPI.</span>
+            <div class="step-stat">✓ Family-specific elasticity</div>
+          </div>
+          <div class="step-item">
+            <strong>Event Shock Kernels</strong>
+            <span>Pre/post shock response windows for Lunar New Year, plant shutdowns, COVID.</span>
+            <div class="step-stat">✓ 18 validated event shocks</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 4 -->
+      <div class="stage-card stage-4">
+        <div class="connector">→</div>
+        <div class="stage-num">04</div>
+        <div class="stage-title">Multi-Horizon Modeling</div>
+        <div class="stage-desc">Direct GBDT optimization with leak-free rolling-origin backtest.</div>
+        <div class="step-list">
+          <div class="step-item">
+            <strong>Direct LightGBM (L1)</strong>
+            <span>Trained direct horizon models using MAE objective for robust P50 medians.</span>
+            <div class="step-stat">✓ 0.286 WAPE vs 0.364 Naive</div>
+          </div>
+          <div class="step-item">
+            <strong>Empirical Interval Scaling</strong>
+            <span>P10–P90 residual ratio distribution pooled over both origins (h1–6, h7–12, h13–19).</span>
+            <div class="step-stat">✓ 78.6% family coverage</div>
+          </div>
+          <div class="step-item">
+            <strong>Empirical Bayes Shrinkage</strong>
+            <span>Family safety buffers shrunk toward pooled: w = n/(n+24) for robust procurement.</span>
+            <div class="step-stat">✓ Stabilized small samples</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 5 -->
+      <div class="stage-card stage-5">
+        <div class="stage-num">05</div>
+        <div class="stage-title">Control Tower & Ops</div>
+        <div class="stage-desc">Full-featured planner cockpit with interactive what-if simulations.</div>
+        <div class="step-list">
+          <div class="step-item">
+            <strong>Lifecycle Governance</strong>
+            <span>Enforced hard zeros post-EOL, ramp-up transfers, and planned customer shutdown rules.</span>
+            <div class="step-stat">✓ 100% boundary integrity</div>
+          </div>
+          <div class="step-item">
+            <strong>Control Tower UI</strong>
+            <span>13 views: Executive, Forecast, Procurement, What-If, Lifecycle, Anomalies.</span>
+            <div class="step-stat">✓ React + TanStack + Recharts</div>
+          </div>
+          <div class="step-item">
+            <strong>Planner Actionability</strong>
+            <span>Cover-to-P90 recommendations, supply exception flags, and real-time scenario modeling.</span>
+            <div class="step-stat">✓ Zero-leakage exports</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Banner -->
+    <div class="results-banner">
+      <div class="results-kpis">
+        <div class="kpi-item">
+          <div class="kpi-label">Pooled WAPE</div>
+          <div class="kpi-value">28.58%</div>
+          <div class="kpi-sub">vs 36.40% S-Naive (-21.5%)</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-label">Family × Region WAPE</div>
+          <div class="kpi-value">9.02%</div>
+          <div class="kpi-sub">High planning precision</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-label">Intermittent Demand</div>
+          <div class="kpi-value">49.4% → 28.6%</div>
+          <div class="kpi-sub">Outperforms Croston-SBA & TSB</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-label">Clean Data Integrity</div>
+          <div class="kpi-value">30,000+</div>
+          <div class="kpi-sub">Anomalies resolved & logged</div>
+        </div>
+      </div>
+      <div class="results-tag">
+        <div class="title">Submission Certified</div>
+        <div class="subtitle">MD5: 0a2755059418bff48edf3a2918ccdf5b</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
