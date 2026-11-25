@@ -1,43 +1,58 @@
-# Welcome to your Lovable project
+# Celeris Demand Control Tower — Frontend
 
-This project was built with [Lovable](https://lovable.dev).
+Interactive single-page demand planning and forecasting cockpit built for the **MKS AI/ML Hackathon**.
 
-## Build with Lovable
+## Architecture & Tech Stack
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+- **Framework:** React 19 + TypeScript (Vite + TanStack Router/Start)
+- **Styling & UI:** Tailwind CSS, Lucide Icons, Radix UI primitives
+- **Visualizations:** Recharts (responsive time-series, grouped comparison bars, treemaps)
+- **Data Engine:** Zero-latency client-side query engine (`src/lib/engine.ts`) operating directly over pre-indexed columnar JSON arrays (`/data/*.json`)
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+## Quick Start
 
-## Development
+```bash
+# 1. Install dependencies
+npm install --legacy-peer-deps
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+# 2. Run local development server (http://127.0.0.1:8080)
 npm run dev
+
+# 3. Run automated Vitest unit & routing tests
+npm test
+
+# 4. Production build
+npm run build
 ```
 
-## Built with
+## Dashboard Capabilities
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+### 13 Specialized Analytical Views
+1. **Executive Overview:** Enterprise demand trajectory, P10–P90 risk envelope, YoY volume variances, and family/regional breakdowns.
+2. **Forecast & Accuracy:** Granular SKU-level forecasts, backtest residuals, origin bias diagnostics, and coverage bands.
+3. **Demand Explorer:** Multi-dimensional drill-down treemap across Family, SKU, Region, Channel, and Customer tiers.
+4. **Anomaly Monitor:** Comprehensive audit ledger tracking data errors, event shocks, and structural breaks.
+5. **Procurement (P90):** Recommended Cover-to-P90 buffer stock, empirical Bayes shrunk family safety margins, and supplier order scheduling.
+6. **What-If Simulator:** Dynamic parameter tuning (Macro shocks, tariff impacts, supplier delivery lead-time delays).
+7. **Data Health:** Real-time data quality scorecards, missingness distribution, and price consistency audits.
+8. **Lifecycle & Phase-In/Out:** Tracking active, ramp-up, mature, and EOL product portfolios.
+9. **Macro Drivers:** Regional economic indicator correlations, lead-lag cross-correlations, and transmission sensitivities.
+10. **Stockouts & Unconstrained Demand:** Lost sales visibility, requested vs shipped volume, and inventory fill rates.
+11. **Planner Exceptions:** Algorithmic alert feed for high-variance SKUs, volatile ordering rhythms, and inventory stockout risks.
+12. **Insights & Strategic Takeaways:** Plain-language synthesis of macro tailwinds, winter demand dynamics, and multi-year outlooks.
+13. **Data Downloads:** Direct export of cleaned panels, forecast ensembles, anomaly logs, and submission packages.
 
-## Using your own data
+### Responsive & Collapsible UX
+- **Desktop Rail (`lg:w-72` $\leftrightarrow$ `lg:w-16`):** One-click collapsible sidebar with smooth transitions, maximizing screen width for wide tabular grids and complex heatmaps.
+- **Mobile Drawer:** Header-integrated filter toggle collapsing extensive dropdown lists into a clean 52px top bar on small viewports.
+- **Global Shortcut:** Press **`Ctrl+B`** (or **`Cmd+B`**) anywhere to toggle the sidebar.
 
-1. Replace the files in `public/data/` (`cube.json`, `dq.json`, `anomalies.json`, `backtest.json`, `insights.json`, `stockouts.json`, `lifecycle.json`, `profile.json`, `exceptions.json`, `meta.json`, `submission.csv`) with your real outputs, keeping the same names and shape.
-2. Optionally edit `public/data/config.json` to change the brand name, starting tab, light/dark default, colours (any CSS colour per token, e.g. `"history"`, `"forecast"`, `"band"`, `"chart-1"`), animation speed, filter labels, and the what-if / exception defaults. Any key you leave out keeps its default.
+## Data Contract
 
-No code changes are needed; every number, date range and horizon is read from these files.
-
----
-## How this app is wired to the pipeline
-- Built with Lovable (TanStack Start + React + Recharts + Tailwind). It reads only `public/data/*.json` + `config.json`.
-- `public/data` is written by the Python pipeline: from the repo root run `make all` (or `make export`). Never edit those JSON files by hand.
-- Run locally: `cd web && npm install --legacy-peer-deps && npm run dev` (open the printed URL). `npm run build` for a production build, `npx vitest run` for the UI tests.
-- `meta.sample_data` is `false` in the exported data (the original Lovable sample data was replaced with the real pipeline outputs).
+All data consumed by the dashboard is generated automatically by the ML pipeline (`make all` or `make export`) into `web/public/data/`:
+- `cube.json`: Multi-dimensional columnar demand cube (historical & forecast arrays).
+- `dq.json`: Data quality audit report and issue breakdown.
+- `anomalies.json`: Flagged data errors, event shocks, and structural shifts.
+- `backtest.json`: Model evaluation metrics, bias across horizons, and empirical scale ratios.
+- `insights.json`: Executive outlooks, macroeconomic lead/lag tables, and shrunk family buffers.
+- `submission.csv`: Competition submission file.
