@@ -166,17 +166,17 @@ function SmallBars<T extends Record<string, unknown>>({ data, x, y, colorOf }: {
   return (
     <div className={isType ? "h-64" : "h-56"}>
       <ResponsiveContainer>
-        <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: isType ? 20 : 0 }}>
+        <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: isType ? 20 : 8 }}>
           <CartesianGrid stroke={C.grid} strokeDasharray="3 3" vertical={false} />
           <XAxis
             dataKey={x}
             {...axisProps}
             interval={0}
-            angle={isType ? -30 : 0}
-            textAnchor={isType ? "end" : "middle"}
-            height={isType ? 45 : undefined}
+            angle={isType ? -30 : -25}
+            textAnchor="end"
+            height={isType ? 45 : 32}
             tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
-            tickFormatter={(v: string) => String(v).replace(/_/g, " ")}
+            tickFormatter={(v: string) => (String(v) === "Series-level" ? "Series lvl" : String(v).replace(/_/g, " "))}
           />
           <YAxis allowDecimals={false} width={32} {...axisProps} />
           <Tooltip content={<GenericTip />} cursor={{ fill: "var(--muted)" }} />
