@@ -318,7 +318,7 @@ npm run dev           # Start interactive dashboard on http://127.0.0.1:8080
 │   ├── VALIDATION_REPORT.md        # Comprehensive backtest & reliability audit
 │   ├── INSIGHTS.md                 # Strategic findings, demand dip analysis
 │   ├── EDA_FINDINGS.md             # Initial exploratory data discovery notes
-│   ├── fresh_clone_check.txt       # Terminal verification log from fresh clone
+│   ├── data_context.md             # Dimensional schemas & field definitions
 │   └── runbook.md                  # Operational pipeline execution runbook
 ├── outputs/
 │   ├── submission.csv              # Official competition submission file (MD5 verified)

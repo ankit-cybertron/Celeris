@@ -1,19 +1,22 @@
-# ADR-0005: Streamlit + Plotly dashboard (not a static HTML page)
+# ADR-0005: Control Tower Dashboard Stack (React + TanStack Start + Recharts)
 
 **Status:** Accepted
 
 ## Context
-Needs ≥5 views with shared filters (family, SKU, region, channel, customer, date), history and forecast on one timeline, uncertainty bands, run locally with documented setup. 245k history rows + 58k forecast rows.
+The competition requires an interactive Demand Control Tower with ≥5 views (Executive, Forecast & Accuracy, Procurement, Demand Explorer, Anomaly Monitor) with shared multi-dimensional cascading filters (Product family, SKU, Region, Sales channel, Customer), continuous history-to-forecast timelines, empirical uncertainty bands, scenario simulation, and responsive layout.
 
-## Options
-| | Static HTML + Chart.js (data embedded) | Streamlit + Plotly |
-|---|---|---|
-| Data size | Must pre-aggregate (>10k rows) → filters limited | Filters operate on the full panel |
-| Shareability | One file | `make dashboard` |
-| Build time | High for 12 views | Low |
+## Options Considered
+| Evaluation Criteria | Static HTML (Embedded JS) | Python Streamlit / Dash | Single-Page React (Vite + TanStack + Recharts) |
+|---|---|---|---|
+| **Responsiveness & State** | Static / read-only | Python server roundtrip on every filter click | Instant client-side filtering via typed arrays |
+| **UX & Modern Controls** | Limited layout flexibility | Fixed Streamlit widget paradigms | Bespoke collapsible rail (`Ctrl+B`), 13 modular views |
+| **Execution Architecture** | Pre-aggregated static file | Heavy Python runtime + WebSocket dependency | Static JSON contract (`web/public/data/`) with client-side engine |
+| **Enterprise Readiness** | Low | Prototype tier | Production enterprise application tier |
 
 ## Decision
-Streamlit + Plotly reading parquet/CSV outputs only. Aggregate P10/P90 use backtest-calibrated ratios per hierarchy level; leaf selections sum leaf quantiles (unpooled; leaf sums exceed portfolio P90).
+Adopt a modern, decoupled single-page React application (`web/`) built with TypeScript, TanStack Start/Router, Tailwind CSS, and Recharts. The pipeline exports pre-indexed columnar JSON arrays (`make export` writes `cube.json`, `dq.json`, `anomalies.json`, `backtest.json`, etc.), and a typed client-side aggregation engine (`Engine` in `web/src/lib/engine.ts`) executes multi-dimensional filtering, aggregations, and scenario simulations with sub-millisecond latency without requiring a backend server.
 
 ## Consequences
-Needs a Python environment on the judge's machine. Mitigation: a static HTML export of the executive view can be added later (`plotly.io.write_html`).
+- **Decoupled Architecture:** ML modeling and web presentation are cleanly decoupled via static JSON data contracts.
+- **Judge Ergonomics:** The dashboard runs locally via `make web` or can be deployed to any static host (Cloudflare, Vercel, Netlify) with zero backend maintenance.
+- **Reliability:** 14 Vitest unit and routing tests validate the web engine and navigation independently of the Python test suite.

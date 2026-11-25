@@ -45,7 +45,7 @@ Dataset is small (250k rows). Full run ≈ 4 min (clean 11 s, anomalies 3 s, bac
 | Model | one global GBM, direct horizons | per-series ETS/ARIMA; deep nets | 3k short, noisy, intermittent series; pooling wins; no recursion error |
 | Intermittent demand | model + cycle features | Croston/TSB per series | cycle features gave no extra gain in backtest; Croston kept as future work |
 | Intervals | quantile GBM + empirical aggregate scaling | conformal / simulation | cheap, honest at each level; coverage 77% shown |
-| Dashboard | Streamlit | static HTML (Chart.js) | 250k rows, shared filters across 12 views, python-native |
+| Dashboard | React (TanStack Start + Recharts) | Streamlit / Dash | Decoupled static JSON contract; instant client-side filtering; enterprise UI |
 | Spikes | cap at 3× local median for training, keep in history | drop | real one-off orders exist but shouldn't be extrapolated |
 
 ## 7. What to revisit
