@@ -24,54 +24,59 @@ Industrial supply chains face extreme forecasting challenges characterized by in
 5. **Empirical Quantile Calibration & Bayes Shrinkage:** Replaces heuristic interval clamps with empirical residual distribution scaling derived across dual rolling-origin backtests ($n = 113,026$). Family procurement safety stock buffers apply empirical Bayes shrinkage ($w = n/(n+24)$) to prevent small-sample noise from triggering inventory over-ordering.
 6. **Executive Control Tower (React + TanStack Start):** A 13-view executive dashboard with collapsible desktop rail and mobile drawer (`Ctrl+B`), continuous timeline visualization, empirical risk envelopes ($P_{10}$–$P_{90}$), what-if scenario stress-testing, and automated exception registries.
 
-![Celeris Control Tower - Executive Overview Dashboard](docs/images/dashboard_executive.png)
+### Primary Demand Trajectory & Mix
+
+![Demand History and Forecast Timeline](docs/images/chart_executive_timeline.png)
+*Figure 1: Continuous enterprise demand trajectory from Celeris Control Tower (shipped history in solid blue, unconstrained demand in light blue, median $P_{50}$ forecast in dashed orange, shaded $P_{10}$–$P_{90}$ empirical uncertainty envelope, and vertical forecast horizon origin line).*
+
+![Volume Mix by Category](docs/images/chart_mix_breakdowns.png)
+*Figure 2: Trailing 12-month history vs. next 12-month forecast volume across Product Families, Regions, and Sales Channels.*
 
 ---
 
 ## End-to-End Methodology & System Architecture
 
-The following diagram illustrates the complete Celeris pipeline from raw telemetry ingestion to executive decision support:
+```mermaid
+flowchart TD
+    subgraph S1["1. Data Ingestion & Hygiene"]
+        R1["Raw Competition Streams<br/><i>train.csv, sku_master, events, macro, stockouts</i>"] --> C1["28 Automated Cleaning Rules"]
+        C1 --> C2["Datetime Normalization & 2062 Glitch Recovery"]
+        C1 --> C3["Decimal Scale & Sign Inversion Rectification"]
+        C1 --> C4["Strict Missingness Semantics<br/><i>Unobserved lifetime kept as NaN, never zero-filled</i>"]
+    end
 
-![Celeris End-to-End Methodology Architecture](docs/celeris_pipeline.png)
+    subgraph S2["2. Censored Demand Reconstruction"]
+        C2 & C3 & C4 --> U1["Stockout Intervals Reconciliation<br/><i>Replace Shipped with Requested Units</i>"]
+        U1 --> U2["Semiconductor Allocation Gap Adjustment"]
+        U2 --> D_PANEL[("Clean Unconstrained Demand Panel")]
+    end
 
-```
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                   CELERIS METHODOLOGY PIPELINE                                        │
-└────────────────────────────────────────────────────────────────────────────────────────────────────────┘
- [ Raw Competition Streams ]
-    │  ├─ train.csv (Historical transactions)
-    │  ├─ sku_master.csv, events_calendar.csv, inventory_stockouts.csv, macro_indicators.csv
-    ▼
- [ Stage 1: Ingestion & 28-Rule Data Hygiene ]
-    │  ├─ Multi-format datetime normalization & 2062 glitch recovery via Load_Timestamp audit
-    │  ├─ Decimal slips, price/revenue reconciliation (Units = Revenue / Price)
-    │  └─ Strict missingness semantics: unobserved series lifetime kept as NaN (never zero-filled)
-    ▼
- [ Stage 2: Censored Demand Unconstraining ]
-    │  ├─ Stockout intervals restored via Requested_Units
-    │  └─ Allocation window volume adjustment
-    ▼
- [ Stage 3: Multi-Scale Feature Engineering ]
-    │  ├─ Autoregressive level & trajectory (m12, m24, g6, g12, mnz24, z12)
-    │  ├─ Customer order cadence & phase detection (cyc_acc, exp_ord)
-    │  ├─ Macroeconomic transfer functions (1-12m lagged regional PMI, Auto Production Index)
-    │  └─ Event shock response kernels (pre/post disruption & holiday windows)
-    ▼
- [ Stage 4: Direct Multi-Horizon GBDT & Empirical Scaling ]
-    │  ├─ LightGBM L1 median objective (Direct horizon multi-output)
-    │  ├─ Multi-origin leak-free backtesting (Origins: 2024-04 & 2025-03, n = 113,026)
-    │  ├─ Empirical quantile interval calibration (P10/P90 residual ratios)
-    │  └─ Empirical Bayes shrinkage for family safety buffers: w = n / (n + 24)
-    ▼
- [ Stage 5: Domain Business Rules & Boundary Safety ]
-    │  ├─ Post-EOL hard zeros with learned wind-down transitions
-    │  ├─ Predecessor-to-successor launch ramp transfers
-    │  └─ Non-negativity guarantees
-    ▼
- [ Stage 6: Celeris Control Tower Dashboard ]
-       ├─ 13 analytical views (Core, Planning, Operations)
-       ├─ Collapsible desktop rail & responsive mobile drawer (Ctrl+B)
-       └─ Real-time what-if scenario simulator & procurement planner
+    subgraph S3["3. Multi-Scale Feature Synthesis"]
+        D_PANEL --> F1["Autoregressive Memory & Lags<br/><i>m12, m24, mnz24, z12, g12</i>"]
+        D_PANEL --> F2["Order Cadence & Phase Timing<br/><i>cyc_acc (#1 Feature), exp_ord</i>"]
+        D_PANEL --> F3["Macro Lead/Lag Transfer Functions<br/><i>Regional PMI, Auto Index (1-12m lags)</i>"]
+        D_PANEL --> F4["Event Response Shock Kernels<br/><i>18 validated holiday & disruption windows</i>"]
+    end
+
+    subgraph S4["4. Direct Multi-Horizon GBDT"]
+        F1 & F2 & F3 & F4 --> M1["Direct Multi-Horizon LightGBM<br/><i>L1 Median Objective for P50</i>"]
+        M1 --> CV["Leak-Free Rolling-Origin Backtest<br/><i>Origins 2024-04 & 2025-03 (n=113,026)</i>"]
+        CV --> CALIB["Empirical Quantile Calibration<br/><i>P10 & P90 empirical residual scaling</i>"]
+        CV --> SHRINK["Empirical Bayes Shrinkage<br/><i>w = n / (n + 24) for Family Buffers</i>"]
+    end
+
+    subgraph S5["5. Domain Business Constraints"]
+        CALIB & SHRINK --> B1["Post-EOL Geometric Wind-Down & Zero Clamp"]
+        B1 --> B2["Successor Launch Ramp S-Curve Transfer"]
+        B2 --> B3["Planned Factory Retooling Shutdown Multipliers"]
+    end
+
+    subgraph S6["6. Celeris Control Tower"]
+        B3 --> CT1["Executive Forecast & Risk Envelopes (P10-P90)"]
+        B3 --> CT2["Procurement Buffer Stock (Cover to P90)"]
+        B3 --> CT3["Interactive What-If Scenario Stress Testing"]
+        B3 --> SUBMIT["Official Verified Submission<br/><i>outputs/submission.csv (MD5 Verified)</i>"]
+    end
 ```
 
 ---
@@ -84,7 +89,8 @@ The model was rigorously validated using a **leak-free rolling-origin backtest**
 
 All models are evaluated on the exact competition horizon length (**19 months out-of-sample**, $n = 113,026$ evaluated series-months).
 
-![Celeris Control Tower - Forecast & Accuracy Benchmark View](docs/images/dashboard_forecast_accuracy.png)
+![Accuracy by Forecast Horizon](docs/images/chart_forecast_horizon_error.png)
+*Figure 3: Out-of-sample backtest accuracy by forecast horizon (1–19 months ahead): WAPE trajectory (lines) and origin bias (bars) across origins 2024-04 & 2025-03.*
 
 ### 1. Overall Forecast Accuracy Benchmark (Row-Level WAPE)
 
@@ -217,6 +223,9 @@ Machine learning forecasts are bounded by hard deterministic domain rules:
    $$w_f = \frac{n_f}{n_f + 24}, \quad \text{Buffer}_f^{\text{shrunk}} = w_f \cdot \text{Buffer}_f^{\text{raw}} + (1 - w_f) \cdot \text{Buffer}_{\text{pooled}}$$
    *This prevents small-sample noise (e.g., in Hydraulic Systems with limited observations) from inflating procurement buffers by over 40%.*
 
+![Monthly Procurement Plan (P50 + Cover to P90)](docs/images/chart_procurement_plan.png)
+*Figure 4: Procurement ordering schedule with $P_{50}$ median requirements and empirical Bayes regularized Cover-to-$P_{90}$ safety stock from the Procurement Control Tower.*
+
 ---
 
 ## Control Tower Dashboard Architecture
@@ -245,10 +254,8 @@ Built as a high-performance, single-page application using **React 19, Vite, Tan
 - **Mobile Drawer:** Header-integrated filter toggle collapsing extensive dropdown lists into a clean 52px top bar on small viewports.
 - **Global Shortcut:** Press **`Ctrl+B`** (or **`Cmd+B`**) anywhere to toggle sidebar states.
 
-<p align="center">
-  <img src="docs/images/dashboard_procurement.png" alt="Celeris Procurement & Inventory Planning View" width="49%" />
-  <img src="docs/images/dashboard_demand_explorer.png" alt="Celeris Demand Explorer View" width="49%" />
-</p>
+![Monthly Seasonality Index](docs/images/chart_seasonality_index.png)
+*Figure 5: Calendar month seasonality indices computed across complete historical years (Demand Explorer).*
 
 ---
 
@@ -307,8 +314,7 @@ npm run dev           # Start interactive dashboard on http://127.0.0.1:8080
 │   ├── raw/                        # 7 raw competition input CSVs (gitignored)
 │   └── processed/                  # Cleaned panels, DQ logs, and feature sets
 ├── docs/
-│   ├── celeris_pipeline.png        # System architecture & process diagram
-│   ├── benchmark_comparison.png    # Empirical benchmark comparison chart
+│   ├── images/                     # Real dashboard chart screenshots
 │   ├── VALIDATION_REPORT.md        # Comprehensive backtest & reliability audit
 │   ├── INSIGHTS.md                 # Strategic findings, demand dip analysis
 │   ├── EDA_FINDINGS.md             # Initial exploratory data discovery notes
