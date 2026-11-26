@@ -2,6 +2,8 @@
 
 Interactive single-page demand planning and forecasting cockpit built for the **MKS AI/ML Hackathon**.
 
+**Live Demo:** [https://celeris.ankit-cybertron.workers.dev](https://celeris.ankit-cybertron.workers.dev)
+
 ## Architecture & Tech Stack
 
 - **Framework:** React 19 + TypeScript (Vite + TanStack Router/Start)
