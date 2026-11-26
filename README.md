@@ -1,13 +1,13 @@
 # Celeris: Multi-Horizon Industrial Demand Forecasting & Control Tower
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![LightGBM](https://img.shields.io/badge/model-LightGBM_L1-green.svg)](https://lightgbm.readthedocs.io/)
 [![React](https://img.shields.io/badge/frontend-React_19_+_TanStack-61dafb.svg)](https://react.dev/)
 [![Submission Verified](https://img.shields.io/badge/submission-MD5_Certified-success.svg)](#reproducibility--verification-protocol)
 
 > **MKS AI/ML Hackathon — Phase 2**  
 > A research-grade, leak-free demand forecasting pipeline and enterprise decision cockpit forecasting monthly `Units_Sold` across **600 SKUs × 6 global regions (3,068 active series)** for the **19-month horizon (November 2026 – May 2028)**.
+> *Note on Series Accounting: 3,068 active forecast series in `test.csv` (submitted predictions), 3,083 series with observed historical transactions, 3,093 total catalog items, and 3,116 unique multi-dimensional slice combinations indexed in the interactive Control Tower cube including historical-only/pre-EOL series.*
 
 ---
 
@@ -352,7 +352,7 @@ npm run dev           # Start interactive dashboard on http://127.0.0.1:8080
 
 | Deliverable | File Path | Format / Size | Checksum / Description |
 |---|---|---|---|
-| **Competition Submission** | [`outputs/submission.csv`](outputs/submission.csv) | CSV (1.8 MB) | `0a2755059418bff48edf3a2918ccdf5b` (58,292 rows) |
+| **Competition Submission** | [`outputs/submission.csv`](outputs/submission.csv) | CSV (1.8 MB) | `0a2755059418bff48edf3a2918ccdf5b` (58,219 rows) |
 | **Comprehensive Forecast** | `data/processed/forecast_full.parquet` | Parquet (2.1 MB) | Includes $P_{10}, P_{50}, P_{90}$, and revenue projections |
 | **Data Quality Ledger** | `data/processed/dq_issues.csv` | CSV (2.4 KB) | 28 audited issue classes with row counts & actions |
 | **Anomaly Register** | [`outputs/anomaly_register.csv`](outputs/anomaly_register.csv) | CSV (2.4 MB) | Granular categorization of errors vs genuine events |

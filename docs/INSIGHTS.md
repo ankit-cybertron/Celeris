@@ -7,7 +7,7 @@ Every number below is computed from the pipeline outputs. Demand = unconstrained
 - Next 12 months (Nov-26 to Oct-27): **1.75M units** (+2.7% vs last 12 months, 1.71M) and **$1.56B revenue** (+7.6% vs $1.45B).
 - 19-month plan: **2.74M units / $2.47B**.
 - Revenue grows faster than units by about 4.8 points: January price rises are in the plan (volume-weighted price effect +5.4% vs last known price).
-- Shape & Trajectory Dynamics: Winter 2025-26 was a demand-driven dip (not supply-driven; stockouts were under 0.3% of volume). The forecast returns toward the 2024 level because the model finds no growth driver in the flat macro paths. Mid-2027 to 2028 YoY of -2% to -7% is therefore the least-evidenced part of the plan; use it with the P10-P90 range.
+- Shape & Trajectory Dynamics: Winter 2025-26 was a demand-driven dip (not supply-driven; stockouts were under 0.3% of volume). The forecast returns toward the 2024 level because the model finds no growth driver in the flat macro paths. Mid-2027 to 2028 YoY of -2% to -8% is therefore the least-evidenced part of the plan; use it with the P10-P90 range.
 
 ## 2. Where the growth and decline are
 
@@ -74,7 +74,7 @@ Every number below is computed from the pipeline outputs. Demand = unconstrained
 
 - Portfolio P90 buffer above P50 by family (shrunk toward pooled all-family buffer of 19.8%; small samples): Brake & Safety Systems +15.1% (raw +12.1%, n=38), Chassis & Structural +15.2% (raw +12.3%, n=38), Electrical Assemblies +26.9% (raw +31.4%, n=38), Hydraulic Systems +27.3% (raw +32.0%, n=38), Precision Machined Parts +20.1% (raw +20.3%, n=38), Powertrain Components +15.6% (raw +12.9%, n=38), Thermal Management +16.2% (raw +14.0%, n=38).
 - Unhedged SKU-level safety stock buffer by family (leaf quantiles summed): Brake & Safety Systems +46%, Chassis & Structural +46%, Electrical Assemblies +47%, Hydraulic Systems +47%, Powertrain Components +46%, Precision Machined Parts +46%, Thermal Management +44%.
-- Key takeaway for planners: Order to P50 at portfolio level; add the ~16% aggregate cover for the family; only apply individual leaf P90 buffers (+44% to +47%) to critical single-source or long lead-time parts to prevent 4x inventory over-ordering.
+- Key takeaway for planners: Order to P50 at portfolio level; add the +15% to +27% aggregate buffer for the family (+13.6% at portfolio level); only apply individual leaf P90 buffers (+44% to +47%) to critical single-source or long lead-time parts to prevent 4x inventory over-ordering.
 
 ## 6. Lifecycle transitions
 

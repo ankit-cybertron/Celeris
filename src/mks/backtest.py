@@ -128,8 +128,8 @@ def compute_crossorigin_coverage(bt: pd.DataFrame, outdir: Path) -> pd.DataFrame
     o0, o1 = origins[0], origins[1]
     b0 = bias(bt[bt.origin == o0].y, bt[bt.origin == o0].lgbm_p50)
     b1 = bias(bt[bt.origin == o1].y, bt[bt.origin == o1].lgbm_p50)
-    lbl0 = f"Origin {o0} ({b0:+.1%} bias)"
-    lbl1 = f"Origin {o1} ({b1:+.1%} bias)"
+    lbl0 = f"Origin {data.mlabel(o0)} ({b0:+.1%} bias)"
+    lbl1 = f"Origin {data.mlabel(o1)} ({b1:+.1%} bias)"
 
     rows = []
     for lvl, by in [("total", []), ("family", ["fam"])]:

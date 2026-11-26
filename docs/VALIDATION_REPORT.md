@@ -1,6 +1,6 @@
 # Validation report
 
-Scope: the cleaned data, anomaly register, forecast, backtest and dashboard, checked against the problem statement's 7 business rules and the 7 jury criteria. Re-run: `make all && make test`. Automated checks live in `tests/test_contract.py` and `tests/test_rules_and_app.py` (34 tests).
+Scope: the cleaned data, anomaly register, forecast, backtest and dashboard, checked against the problem statement's 7 business rules and the 7 jury criteria. Re-run: `make all && make test`. Automated checks live in `tests/test_contract.py` and `tests/test_rules_and_app.py` (35 tests).
 
 ## Overall assessment: share with caveats
 
@@ -86,7 +86,7 @@ Aggregate P10–P90 intervals are derived from empirical error distributions acr
 ## Required caveats for stakeholders
 1. Forecast is unconstrained demand (rule 7); shipments will be lower if supply limits recur.
 2. Row-level error is about 29% by design (many intermittent series); use aggregates for planning and intervals for SKU-level.
-3. **Forecast shape & trajectory dynamics:** Winter 2025-26 was a demand-driven dip (not supply-driven; stockouts were under 0.3% of volume). The forecast returns toward the 2024 level because the model finds no growth driver in the flat macro paths. Mid-2027 to 2028 YoY of -2% to -7% is therefore the least-evidenced part of the plan; use it with the P10-P90 range. The backtest exhibits a ±12% bias swing across rolling origins.
+3. **Forecast shape & trajectory dynamics:** Winter 2025-26 was a demand-driven dip (not supply-driven; stockouts were under 0.3% of volume). The forecast returns toward the 2024 level because the model finds no growth driver in the flat macro paths. Mid-2027 to 2028 YoY of -2% to -8% is therefore the least-evidenced part of the plan; use it with the P10-P90 range. The backtest exhibits a ±12% bias swing across rolling origins.
 4. Stockout file is incomplete; unlisted months in the semiconductor window are estimated (ADR 0003).
 5. EV-062 (planned retooling) is applied as a 78% cut, an assumption to replace with the customer's plan.
 6. Macro lead/lag figures are correlations (COVID months excluded), not causal estimates; they drive the what-if tab only.

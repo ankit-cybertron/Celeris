@@ -186,7 +186,7 @@ def _write_md(o: dict, cfg) -> None:
          f"- Next 12 months (Nov-26 to Oct-27): **{_fmt(H['next12_units'])} units** ({H['units_growth_pct']:+.1f}% vs last 12 months, {_fmt(H['last12_units'])}) and **{_fmt(H['next12_revenue'], True)} revenue** ({H['revenue_growth_pct']:+.1f}% vs {_fmt(H['last12_revenue'], True)}).",
          f"- 19-month plan: **{_fmt(H['total19_units'])} units / {_fmt(H['total19_revenue'], True)}**.",
          f"- Revenue grows faster than units by about {H['revenue_growth_pct'] - H['units_growth_pct']:.1f} points: January price rises are in the plan (volume-weighted price effect {o['price_effect']['weighted_price_change_pct']:+.1f}% vs last known price).",
-         "- Shape & Trajectory Dynamics: Winter 2025-26 was a demand-driven dip (not supply-driven; stockouts were under 0.3% of volume). The forecast returns toward the 2024 level because the model finds no growth driver in the flat macro paths. Mid-2027 to 2028 YoY of -2% to -7% is therefore the least-evidenced part of the plan; use it with the P10-P90 range.", "",
+         "- Shape & Trajectory Dynamics: Winter 2025-26 was a demand-driven dip (not supply-driven; stockouts were under 0.3% of volume). The forecast returns toward the 2024 level because the model finds no growth driver in the flat macro paths. Mid-2027 to 2028 YoY of -2% to -8% is therefore the least-evidenced part of the plan; use it with the P10-P90 range.", "",
          "## 2. Where the growth and decline are", ""]
     for dim, name in (("Product_Family", "Family"), ("Region", "Region"), ("Sales_Channel", "Channel")):
         L += [f"**By {name.lower()}** (next 12m vs last 12m)", "", f"| {name} | Last 12m units | Next 12m units | Units % | Revenue % |", "|---|---:|---:|---:|---:|"]
@@ -209,7 +209,7 @@ def _write_md(o: dict, cfg) -> None:
           "## 5. Risk and procurement", "",
           f"- Portfolio P90 buffer above P50 by family (shrunk toward pooled all-family buffer of {o.get('p90_buffer_pooled_pct', 19.8):.1f}%; small samples): " + ", ".join(f"{k} +{v:.1f}% (raw +{o.get('p90_buffer_family_detail', {}).get(k, {}).get('raw', v):.1f}%, n={o.get('p90_buffer_family_detail', {}).get(k, {}).get('n', 38)})" for k, v in o["p90_buffer_pct_by_family"].items()) + ".",
           "- Unhedged SKU-level safety stock buffer by family (leaf quantiles summed): " + ", ".join(f"{k} +{v:.0f}%" for k, v in o["p90_buffer_leaf_pct_by_family"].items()) + ".",
-          "- Key takeaway for planners: Order to P50 at portfolio level; add the ~16% aggregate cover for the family; only apply individual leaf P90 buffers (+44% to +47%) to critical single-source or long lead-time parts to prevent 4x inventory over-ordering.", "",
+          "- Key takeaway for planners: Order to P50 at portfolio level; add the +15% to +27% aggregate buffer for the family (+13.6% at portfolio level); only apply individual leaf P90 buffers (+44% to +47%) to critical single-source or long lead-time parts to prevent 4x inventory over-ordering.", "",
           "## 6. Lifecycle transitions", ""]
     for r in o["lifecycle"]:
         L.append(f"- **{r['SKU_ID']}** ({r['status']}): launch {r['launch']}" + (f", EOL {r['eol']}" if r["eol"] else "") + (f", replaces {r['replaces']}" if r["replaces"] else "") + f"; 19-month forecast {r['forecast_units_19m']:,.0f} units.")

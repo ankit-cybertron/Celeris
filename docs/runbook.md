@@ -4,7 +4,7 @@
 `make all` (≈4 min) → `make test` → `make dashboard`. `make fast` is a ≈1-minute smoke run with tiny models (do not submit its output).
 
 ## Resume after an interruption
-1. Read `PROGRESS.md` (checklist + log). 2. `git status && git log --oneline | head`. 3. Check that the last "done" artefact exists (`ls outputs data/processed`). 4. Resume at the first unchecked stage; stages are idempotent and communicate through files.
+1. Check git status: `git status && git log --oneline -n 5`. 2. Check that the last "done" artefact exists (`ls outputs data/processed`). 3. Resume at the first unchecked stage; stages are idempotent and communicate through files.
 
 ## Stage contract
 | Stage | Reads | Writes |

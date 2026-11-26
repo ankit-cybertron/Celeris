@@ -26,7 +26,7 @@ data/raw/*.csv ──► clean ──► panel_clean.parquet ─┐
 Stages communicate only through files in `data/processed` and `outputs` → each stage is re-runnable and the dashboard needs no pipeline imports.
 
 ## 3. Data model
-* **Series** = (`SKU_ID`, `Region`); 3,093 (3,083 with history + 10 launch series without history; 3,068 of them are in test.csv). Attributes: family, powertrain, size, customer, channel (customer/channel come from test.csv for the future).
+* **Series** = (`SKU_ID`, `Region`); 3,093 catalog series (3,083 with history + 10 launch series without history; exactly 3,068 of them are active in `test.csv` for forecasting). In the interactive dashboard cube, slicing by `(SKU, Region, Channel, Customer)` indexes 3,116 distinct multi-dimensional series combinations across history and forecast (3,068 active forecast series + 48 historical/pre-EOL slices). Attributes: family, powertrain, size, customer, channel.
 * **Panel row** = (series, month): `Units_Clean`, `Demand_Unconstrained`, `Demand_Model` (capped spikes), `Price_Clean`, `Revenue_Clean`, `row_status` (`observed|missing|from_stockout_file`), `fix_flags`, stockout fields.
 * **Matrix** `Y[series, month 0..112]` (2019-01…2028-05); `NaN` = unknown, never 0.
 

@@ -192,7 +192,10 @@ export function Sidebar() {
           <RotateCcw className="size-4 transition-transform duration-500" aria-hidden /> Reset filters
         </button>
         <div className="mt-5">
-          <div className="mb-1.5 flex justify-between text-xs text-sidebar-muted">
+          <div
+            className="mb-1.5 flex justify-between text-xs text-sidebar-muted"
+            title={`${engine.nSeries} total multi-dimensional series slices across history & forecast (3,068 active forecast series in test.csv + 48 historical/EOL slices)`}
+          >
             <span>Series in view</span>
             <span className="tabular"><span className="text-sidebar-foreground">{nSel}</span> / {engine.nSeries}</span>
           </div>
