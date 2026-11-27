@@ -207,7 +207,7 @@ def _write_md(o: dict, cfg) -> None:
           "- Lost revenue by family: " + ", ".join(f"{k} {_fmt(v, True)}" for k, v in list(S["by_family"].items())[:3]) + " (top 3).",
           "- The stockout file is incomplete; unlisted months inside the documented semiconductor window were estimated, so real losses are higher than the file shows.", "",
           "## 5. Risk and procurement", "",
-          f"- Portfolio P90 buffer above P50 by family (shrunk toward pooled all-family buffer of {o.get('p90_buffer_pooled_pct', 19.8):.1f}%; small samples): " + ", ".join(f"{k} +{v:.1f}% (raw +{o.get('p90_buffer_family_detail', {}).get(k, {}).get('raw', v):.1f}%, n={o.get('p90_buffer_family_detail', {}).get(k, {}).get('n', 38)})" for k, v in o["p90_buffer_pct_by_family"].items()) + ".",
+          f"- Portfolio P90 buffer above P50 by family (shrinkage toward the pooled buffer of {o.get('p90_buffer_pooled_pct', 19.8):.1f}%, w = n/(n+24), chosen constant): " + ", ".join(f"{k} +{v:.1f}% (raw +{o.get('p90_buffer_family_detail', {}).get(k, {}).get('raw', v):.1f}%, n={o.get('p90_buffer_family_detail', {}).get(k, {}).get('n', 38)})" for k, v in o["p90_buffer_pct_by_family"].items()) + ".",
           "- Unhedged SKU-level safety stock buffer by family (leaf quantiles summed): " + ", ".join(f"{k} +{v:.0f}%" for k, v in o["p90_buffer_leaf_pct_by_family"].items()) + ".",
           "- Key takeaway for planners: Order to P50 at portfolio level; add the +15% to +27% aggregate buffer for the family (+13.6% at portfolio level); only apply individual leaf P90 buffers (+44% to +47%) to critical single-source or long lead-time parts to prevent 4x inventory over-ordering.", "",
           "## 6. Lifecycle transitions", ""]

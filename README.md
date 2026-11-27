@@ -24,7 +24,7 @@ Industrial supply chains face extreme forecasting challenges characterized by in
 2. **Censored Demand Reconstruction:** Distinguishes between recorded transactional sales and true unconstrained demand by substituting stockout periods with requested units and estimating allocation-window suppression.
 3. **Multi-Scale Feature Synthesis:** Synthesizes ordering rhythm signals (`cyc_acc`, `exp_ord`), macroeconomic lead-lag transfer functions (1–12 month lagged regional PMI, automotive production indices), and asymmetric pre/post holiday and event kernels.
 4. **Direct Multi-Horizon Gradient Boosted Trees:** Deploys a global LightGBM model optimized with an $L_1$ loss objective (MAE) for robust median ($P_{50}$) path forecasting, completely eliminating recursive error compounding over the 19-month horizon.
-5. **Empirical Quantile Calibration & Bayes Shrinkage:** Replaces heuristic interval clamps with empirical residual distribution scaling derived across dual rolling-origin backtests ($n = 113,026$). Family procurement safety stock buffers apply empirical Bayes shrinkage ($w = n/(n+24)$) to prevent small-sample noise from triggering inventory over-ordering.
+5. **Empirical Quantile Calibration & Pooled Buffer Shrinkage:** Replaces heuristic interval clamps with empirical residual distribution scaling derived across dual rolling-origin backtests ($n = 113,026$). Family procurement safety stock buffers apply shrinkage toward the pooled buffer ($w = n/(n+24)$, chosen constant) to prevent small-sample noise from triggering inventory over-ordering.
 6. **Executive Control Tower (React + TanStack Start):** A 13-view executive dashboard with collapsible desktop rail and mobile drawer (`Ctrl+B`), continuous timeline visualization, empirical risk envelopes ($P_{10}$–$P_{90}$), what-if scenario stress-testing, and automated exception registries.
 
 ### Primary Demand Trajectory & Mix
@@ -58,14 +58,14 @@ flowchart TD
         D_PANEL --> F1["Autoregressive Memory & Lags<br/><i>m12, m24, mnz24, z12, g12</i>"]
         D_PANEL --> F2["Order Cadence & Phase Timing<br/><i>cyc_acc (#1 Feature), exp_ord</i>"]
         D_PANEL --> F3["Macro Lead/Lag Transfer Functions<br/><i>Regional PMI, Auto Index (1-12m lags)</i>"]
-        D_PANEL --> F4["Event Response Shock Kernels<br/><i>18 validated holiday & disruption windows</i>"]
+        D_PANEL --> F4["Event Response Shock Kernels<br/><i>41 historical event windows</i>"]
     end
 
     subgraph S4["4. Direct Multi-Horizon GBDT"]
         F1 & F2 & F3 & F4 --> M1["Direct Multi-Horizon LightGBM<br/><i>L1 Median Objective for P50</i>"]
         M1 --> CV["Leak-Free Rolling-Origin Backtest<br/><i>Origins 2024-04 & 2025-03 (n=113,026)</i>"]
         CV --> CALIB["Empirical Quantile Calibration<br/><i>P10 & P90 empirical residual scaling</i>"]
-        CV --> SHRINK["Empirical Bayes Shrinkage<br/><i>w = n / (n + 24) for Family Buffers</i>"]
+        CV --> SHRINK["Pooled Buffer Shrinkage<br/><i>w = n/(n+24), chosen constant</i>"]
     end
 
     subgraph S5["5. Domain Business Constraints"]
@@ -139,7 +139,7 @@ Uncertainty quantification uses empirical backtest residual ratios scaled agains
 
 > [!IMPORTANT]
 > **Empirical Calibration Transparency:**  
-> When evaluating cross-origin coverage out-of-sample, coverage drops because the two historical test origins inhabited radically opposite macroeconomic regimes ($-11.9\%$ vs $+5.0\%$ bias). Pooled calibration achieves **78.6% coverage** at the family level. As explicitly documented in our validation reports, **$P_{10}$–$P_{90}$ intervals rest on 2 backtest origins and must be treated as indicative operational guidance rather than theoretical coverage guarantees.**
+> Leaf-level $P_{10}$–$P_{90}$ coverage (77%) is measured on the last origin only (Origin 2025-03). When evaluating cross-origin coverage out-of-sample, coverage drops because the two historical test origins inhabited radically opposite macroeconomic regimes ($-11.9\%$ vs $+5.0\%$ bias). Pooled calibration achieves **78.6% coverage** at the family level. As explicitly documented in our validation reports, **aggregate $P_{10}$–$P_{90}$ bands rest on 2 backtest origins and are indicative operational guidance rather than theoretical coverage guarantees.**
 
 ---
 
@@ -221,13 +221,13 @@ Machine learning forecasts are bounded by hard deterministic domain rules:
    New product introductions inheriting predecessor volume receive an S-curve ramp function calibrated against historical predecessor demand.
 3. **Planned Customer Factory Shutdowns:**
    Regional customer vacation and retooling shutdowns (e.g., North American summer shutdowns in July, European shutdowns in August, Lunar New Year in APAC) apply validated multiplicative shock penalties derived from historical event logs.
-4. **Empirical Bayes Safety Stock Shrinkage:**
-   To calculate safety stock buffers at the product family level, raw $P_{90}$ buffers are regularized toward the pooled mean:
+4. **Pooled Buffer Safety Stock Shrinkage:**
+   To calculate safety stock buffers at the product family level, raw $P_{90}$ buffers apply shrinkage toward the pooled buffer ($w = n/(n+24)$, chosen constant):
    $$w_f = \frac{n_f}{n_f + 24}, \quad \text{Buffer}_f^{\text{shrunk}} = w_f \cdot \text{Buffer}_f^{\text{raw}} + (1 - w_f) \cdot \text{Buffer}_{\text{pooled}}$$
    *This prevents small-sample noise (e.g., in Hydraulic Systems with limited observations) from inflating procurement buffers by over 40%.*
 
 ![Monthly Procurement Plan (P50 + Cover to P90)](docs/images/chart_procurement_plan.png)
-*Figure 4: Procurement ordering schedule with $P_{50}$ median requirements and empirical Bayes regularized Cover-to-$P_{90}$ safety stock from the Procurement Control Tower.*
+*Figure 4: Procurement ordering schedule with $P_{50}$ median requirements and shrinkage-regularized Cover-to-$P_{90}$ safety stock (toward the pooled buffer, $w = n/(n+24)$, chosen constant) from the Procurement Control Tower.*
 
 ---
 
@@ -359,7 +359,7 @@ npm run dev           # Start interactive dashboard on http://127.0.0.1:8080
 | **Comprehensive Forecast** | `data/processed/forecast_full.parquet` | Parquet (2.1 MB) | Includes $P_{10}, P_{50}, P_{90}$, and revenue projections |
 | **Data Quality Ledger** | `data/processed/dq_issues.csv` | CSV (2.4 KB) | 28 audited issue classes with row counts & actions |
 | **Anomaly Register** | [`outputs/anomaly_register.csv`](outputs/anomaly_register.csv) | CSV (2.4 MB) | Granular categorization of errors vs genuine events |
-| **Event Impact Analysis** | [`outputs/event_impacts.csv`](outputs/event_impacts.csv) | CSV (6.1 KB) | Pre/post demand shocks for 18 global events |
+| **Event Impact Analysis** | [`outputs/event_impacts.csv`](outputs/event_impacts.csv) | CSV (6.1 KB) | Pre/post demand shocks for 52 logged events (41 historical holiday, disruption, customer, logistics & supply events) |
 | **Backtest Metrics** | [`outputs/backtest/metrics_overall.csv`](outputs/backtest/metrics_overall.csv) | CSV (1.0 KB) | Comparative performance across 5 model classes |
 | **Interval Reliability** | [`outputs/backtest/interval_coverage_crossorigin.csv`](outputs/backtest/interval_coverage_crossorigin.csv) | CSV (461 B) | Out-of-sample empirical coverage evaluations |
 | **Control Tower App** | [`web/`](web/) | TypeScript / React | Interactive enterprise demand planning dashboard |

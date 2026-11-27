@@ -72,7 +72,7 @@ Every number below is computed from the pipeline outputs. Demand = unconstrained
 
 ## 5. Risk and procurement
 
-- Portfolio P90 buffer above P50 by family (shrunk toward pooled all-family buffer of 19.8%; small samples): Brake & Safety Systems +15.1% (raw +12.1%, n=38), Chassis & Structural +15.2% (raw +12.3%, n=38), Electrical Assemblies +26.9% (raw +31.4%, n=38), Hydraulic Systems +27.3% (raw +32.0%, n=38), Precision Machined Parts +20.1% (raw +20.3%, n=38), Powertrain Components +15.6% (raw +12.9%, n=38), Thermal Management +16.2% (raw +14.0%, n=38).
+- Portfolio P90 buffer above P50 by family (shrinkage toward the pooled buffer of 19.8%, w = n/(n+24), chosen constant): Brake & Safety Systems +15.1% (raw +12.1%, n=38), Chassis & Structural +15.2% (raw +12.3%, n=38), Electrical Assemblies +26.9% (raw +31.4%, n=38), Hydraulic Systems +27.3% (raw +32.0%, n=38), Precision Machined Parts +20.1% (raw +20.3%, n=38), Powertrain Components +15.6% (raw +12.9%, n=38), Thermal Management +16.2% (raw +14.0%, n=38).
 - Unhedged SKU-level safety stock buffer by family (leaf quantiles summed): Brake & Safety Systems +46%, Chassis & Structural +46%, Electrical Assemblies +47%, Hydraulic Systems +47%, Powertrain Components +46%, Precision Machined Parts +46%, Thermal Management +44%.
 - Key takeaway for planners: Order to P50 at portfolio level; add the +15% to +27% aggregate buffer for the family (+13.6% at portfolio level); only apply individual leaf P90 buffers (+44% to +47%) to critical single-source or long lead-time parts to prevent 4x inventory over-ordering.
 
