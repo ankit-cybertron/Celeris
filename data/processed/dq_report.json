@@ -1,0 +1,243 @@
+{
+  "issues": [
+    {
+      "file": "train.csv",
+      "issue": "non-standard date format",
+      "rows_affected": 9967,
+      "action": "parsed to YYYY-MM",
+      "severity": "warning"
+    },
+    {
+      "file": "train.csv",
+      "issue": "date outside history (e.g. year 2062)",
+      "rows_affected": 30,
+      "action": "Date = Load_Timestamp month - 1",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "Year/Month disagree with Date",
+      "rows_affected": 246,
+      "action": "trusted Date (rule 1); Year/Month dropped",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "malformed SKU_ID (case/underscore/padding)",
+      "rows_affected": 3741,
+      "action": "normalised to AAA-NNN",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "inconsistent region labels",
+      "rows_affected": 5992,
+      "action": "mapped to canonical",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "inconsistent channel labels",
+      "rows_affected": 3745,
+      "action": "mapped to canonical",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "customer name variants/typos",
+      "rows_affected": 2490,
+      "action": "case/whitespace/Inc + fuzzy match to 12 canonical",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "missing Product_Family",
+      "rows_affected": 1252,
+      "action": "derived from SKU prefix via sku_master",
+      "severity": "warning"
+    },
+    {
+      "file": "sku_master.csv",
+      "issue": "Business_Unit contradicts family's single BU (PMP-004)",
+      "rows_affected": 1,
+      "action": "master BU overridden by the family's BU observed in transactions",
+      "severity": "warning"
+    },
+    {
+      "file": "train.csv",
+      "issue": "duplicate Record_ID (loaded twice)",
+      "rows_affected": 3682,
+      "action": "kept latest Load_Timestamp (rule 2)",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "missing Region",
+      "rows_affected": 942,
+      "action": "imputed 940 from SKU+customer slot; rest dropped",
+      "severity": "warning"
+    },
+    {
+      "file": "train.csv",
+      "issue": "units non-numeric ('-', text)",
+      "rows_affected": 217,
+      "action": "set missing; recover from Revenue/Price where possible",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "units with thousands separator",
+      "rows_affected": 44,
+      "action": "parsed",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "units missing",
+      "rows_affected": 3327,
+      "action": "set missing; recover from Revenue/Price where possible",
+      "severity": "warning"
+    },
+    {
+      "file": "train.csv",
+      "issue": "negative units (sign flip)",
+      "rows_affected": 491,
+      "action": "abs()",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "units inflated x100 (Revenue/(Units*Price)=0.01)",
+      "rows_affected": 75,
+      "action": "Units = Revenue/Price",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "units off by 10x (fixed from Revenue/Price)",
+      "rows_affected": 290,
+      "action": "Units = Revenue/Price",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "revenue off by 10x (units kept)",
+      "rows_affected": 428,
+      "action": "Revenue recomputed = Units*Price",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "units recovered from Revenue/Price",
+      "rows_affected": 2545,
+      "action": "Units = Revenue/Price",
+      "severity": "info"
+    },
+    {
+      "file": "train.csv",
+      "issue": "price in cents (x100)",
+      "rows_affected": 614,
+      "action": "Price = SKU-month reference price",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "price 0 with units > 0",
+      "rows_affected": 295,
+      "action": "Price = SKU-month reference price",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "revenue still not reconciling after fixes (kept recomputed)",
+      "rows_affected": 2267,
+      "action": "Revenue recomputed",
+      "severity": "warning"
+    },
+    {
+      "file": "train.csv",
+      "issue": "revenue missing",
+      "rows_affected": 380,
+      "action": "Revenue recomputed = Units*Price",
+      "severity": "info"
+    },
+    {
+      "file": "train.csv",
+      "issue": "Units_Sold disagrees with stockout Shipped_Units",
+      "rows_affected": 63,
+      "action": "Units = Shipped_Units",
+      "severity": "error"
+    },
+    {
+      "file": "train.csv",
+      "issue": "missing rows inside series lifetime (not zero)",
+      "rows_affected": 948,
+      "action": "kept as NaN (unknown), never zero-filled",
+      "severity": "warning"
+    },
+    {
+      "file": "macro_indicators.csv",
+      "issue": "duplicate month",
+      "rows_affected": 1,
+      "action": "kept row closest to neighbours (2022-06)",
+      "severity": "error"
+    },
+    {
+      "file": "macro_indicators.csv",
+      "issue": "PMI decimal slip (<20)",
+      "rows_affected": 1,
+      "action": "x10",
+      "severity": "error"
+    },
+    {
+      "file": "macro_indicators.csv",
+      "issue": "YoY growth stored as fraction not percent",
+      "rows_affected": 12,
+      "action": "x100",
+      "severity": "error"
+    },
+    {
+      "file": "macro_indicators.csv",
+      "issue": "missing indicator values",
+      "rows_affected": 5,
+      "action": "linear interpolation",
+      "severity": "warning"
+    }
+  ],
+  "summary": {
+    "before": {
+      "rows": 248248,
+      "duplicate_record_ids": 3682,
+      "distinct_region_labels": 29,
+      "distinct_channel_labels": 17,
+      "distinct_customer_labels": 220,
+      "distinct_sku_labels": 2659,
+      "distinct_date_strings": 667,
+      "missing_region": 952,
+      "missing_family": 1252,
+      "missing_or_nonnumeric_units": 3580,
+      "negative_units": 497,
+      "units_sum": 12217326.0,
+      "units_max": 16300.0
+    },
+    "after": {
+      "rows": 244590,
+      "duplicate_record_ids": 0,
+      "distinct_region_labels": 6,
+      "distinct_channel_labels": 4,
+      "distinct_customer_labels": 12,
+      "distinct_sku_labels": 598,
+      "distinct_date_strings": 94,
+      "missing_region": 0,
+      "missing_family": 0,
+      "missing_or_nonnumeric_units": 1927,
+      "negative_units": 0,
+      "units_sum": 11706334.0,
+      "units_max": 2002.0
+    },
+    "raw_rows": 248248,
+    "clean_observed_rows": 244590,
+    "panel_rows": 245538,
+    "series": 3083
+  }
+}

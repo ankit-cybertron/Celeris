@@ -2,10 +2,7 @@ __pycache__/
 *.pyc
 .venv/
 .pytest_cache/
-data/processed/
-*.parquet
 .DS_Store
-data/raw/*.csv
 node_modules/
 web/node_modules/
 web/dist/
@@ -14,4 +11,5 @@ web/.output/
 web/.nitro/
 web/.tanstack/
 web/.wrangler/
+
 

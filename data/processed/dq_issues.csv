@@ -1,0 +1,30 @@
+file,issue,rows_affected,action,severity
+train.csv,non-standard date format,9967,parsed to YYYY-MM,warning
+train.csv,inconsistent region labels,5992,mapped to canonical,error
+train.csv,inconsistent channel labels,3745,mapped to canonical,error
+train.csv,malformed SKU_ID (case/underscore/padding),3741,normalised to AAA-NNN,error
+train.csv,duplicate Record_ID (loaded twice),3682,kept latest Load_Timestamp (rule 2),error
+train.csv,units missing,3327,set missing; recover from Revenue/Price where possible,warning
+train.csv,units recovered from Revenue/Price,2545,Units = Revenue/Price,info
+train.csv,customer name variants/typos,2490,case/whitespace/Inc + fuzzy match to 12 canonical,error
+train.csv,revenue still not reconciling after fixes (kept recomputed),2267,Revenue recomputed,warning
+train.csv,missing Product_Family,1252,derived from SKU prefix via sku_master,warning
+train.csv,missing rows inside series lifetime (not zero),948,"kept as NaN (unknown), never zero-filled",warning
+train.csv,missing Region,942,imputed 940 from SKU+customer slot; rest dropped,warning
+train.csv,price in cents (x100),614,Price = SKU-month reference price,error
+train.csv,negative units (sign flip),491,abs(),error
+train.csv,revenue off by 10x (units kept),428,Revenue recomputed = Units*Price,error
+train.csv,revenue missing,380,Revenue recomputed = Units*Price,info
+train.csv,price 0 with units > 0,295,Price = SKU-month reference price,error
+train.csv,units off by 10x (fixed from Revenue/Price),290,Units = Revenue/Price,error
+train.csv,Year/Month disagree with Date,246,trusted Date (rule 1); Year/Month dropped,error
+train.csv,"units non-numeric ('-', text)",217,set missing; recover from Revenue/Price where possible,error
+train.csv,units inflated x100 (Revenue/(Units*Price)=0.01),75,Units = Revenue/Price,error
+train.csv,Units_Sold disagrees with stockout Shipped_Units,63,Units = Shipped_Units,error
+train.csv,units with thousands separator,44,parsed,error
+train.csv,date outside history (e.g. year 2062),30,Date = Load_Timestamp month - 1,error
+macro_indicators.csv,YoY growth stored as fraction not percent,12,x100,error
+macro_indicators.csv,missing indicator values,5,linear interpolation,warning
+sku_master.csv,Business_Unit contradicts family's single BU (PMP-004),1,master BU overridden by the family's BU observed in transactions,warning
+macro_indicators.csv,duplicate month,1,kept row closest to neighbours (2022-06),error
+macro_indicators.csv,PMI decimal slip (<20),1,x10,error
