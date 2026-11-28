@@ -1,6 +1,6 @@
-import { useLayoutEffect, useRef, useState, type ComponentType } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentType } from "react";
 import {
-  Activity, AlertTriangle, ChevronDown, Download, Flag, Gauge, Globe, LayoutDashboard, Mail, Moon, MoreHorizontal, PackageX, ShieldCheck,
+  Activity, AlertTriangle, BookOpen, ChevronDown, Download, ExternalLink, Flag, Gauge, Github, Globe, LayoutDashboard, Linkedin, Mail, Moon, MoreHorizontal, PackageX, ShieldCheck,
   ShoppingCart, SlidersHorizontal, Sparkles, Sprout, Sun, TrendingUp, X, type LucideIcon,
 } from "lucide-react";
 import { DashboardProvider, DIMS, useDashboard } from "./DashboardContext";
@@ -75,80 +75,173 @@ export function Dashboard({ data, config, tab, onTab }: { data: Dataset; config:
 }
 
 function TabNav({ tab, onTab }: { tab: TabId; onTab: (t: TabId) => void }) {
-  const activeMore = MORE_TABS.find((t) => t.id === tab);
+  const navRef = useRef<HTMLElement>(null);
+  const measureRef = useRef<HTMLDivElement>(null);
+  const [visibleCount, setVisibleCount] = useState<number>(TABS.length);
+
+  useEffect(() => {
+    const navEl = navRef.current;
+    const measEl = measureRef.current;
+    if (!navEl || !measEl) return;
+
+    const compute = () => {
+      const style = window.getComputedStyle(navEl);
+      const padLeft = parseFloat(style.paddingLeft) || 0;
+      const padRight = parseFloat(style.paddingRight) || 0;
+      // Usable width strictly inside nav padding
+      const available = navEl.clientWidth - padLeft - padRight - 4;
+      if (available <= 0) return;
+
+      const tabEls = Array.from(measEl.querySelectorAll<HTMLElement>("[data-measure-tab]"));
+      const moreEl = measEl.querySelector<HTMLElement>("[data-measure-more]");
+      if (!tabEls.length || !moreEl) return;
+
+      const tabWidths = tabEls.map((el) => el.offsetWidth);
+      const standardMoreWidth = moreEl.offsetWidth;
+      const gap = 4; // gap-1 in tailwind is 4px
+
+      const totalAll = tabWidths.reduce((a, b) => a + b, 0) + (tabWidths.length - 1) * gap;
+      if (available >= totalAll) {
+        setVisibleCount(TABS.length);
+        return;
+      }
+
+      // Reserve space for More button (including if an overflow tab's name is shown on it)
+      const maxMoreWidth = Math.max(standardMoreWidth + 12, ...tabWidths.slice(2).map((w) => w + 20));
+      let used = maxMoreWidth + gap;
+      let count = 0;
+      for (let i = 0; i < tabWidths.length; i++) {
+        const next = used + tabWidths[i] + gap;
+        if (next <= available) {
+          used = next;
+          count++;
+        } else {
+          break;
+        }
+      }
+      setVisibleCount(Math.max(1, count));
+    };
+
+    compute();
+    const ro = new ResizeObserver(compute);
+    ro.observe(navEl);
+    return () => ro.disconnect();
+  }, []);
+
+  const visibleTabs = useMemo(() => TABS.slice(0, visibleCount), [visibleCount]);
+  const overflowTabs = useMemo(() => TABS.slice(visibleCount), [visibleCount]);
+  const activeMore = overflowTabs.find((t) => t.id === tab);
   const isMoreActive = Boolean(activeMore);
 
   return (
-    <nav aria-label="Views" role="tablist" className="relative flex flex-wrap items-center gap-1 px-3 sm:px-4 pb-2">
-      {MAIN_TABS.map((t) => {
-        const Icon = ICONS[t.id];
-        const on = tab === t.id;
-        return (
-          <button
-            key={t.id}
-            data-tab={t.id}
-            role="tab"
-            aria-selected={on}
-            onClick={() => onTab(t.id)}
-            className={cn(
-              "relative inline-flex h-8 shrink-0 items-center gap-1 rounded-full px-2 sm:px-2.5 text-xs sm:text-[12.5px] font-medium whitespace-nowrap transition-colors",
-              on
-                ? "bg-card text-foreground shadow-xs ring-1 ring-border"
-                : "text-muted-foreground hover:bg-card/40 hover:text-foreground",
-            )}
-          >
-            <Icon className={cn("size-3.5 transition-colors", on ? "text-forecast" : "opacity-70")} aria-hidden />
-            <span>{t.label}</span>
-          </button>
-        );
-      })}
+    <>
+      {/* Hidden offscreen container for accurate runtime DOM measurement */}
+      <div
+        ref={measureRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-[9999px] top-0 invisible flex flex-nowrap items-center gap-1"
+      >
+        {TABS.map((t) => {
+          const Icon = ICONS[t.id];
+          return (
+            <div
+              key={t.id}
+              data-measure-tab={t.id}
+              className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full px-2 sm:px-2.5 text-xs sm:text-[12.5px] font-medium whitespace-nowrap"
+            >
+              <Icon className="size-3.5" />
+              <span>{t.label}</span>
+            </div>
+          );
+        })}
+        <div
+          data-measure-more
+          className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full px-2 sm:px-2.5 text-xs sm:text-[12.5px] font-medium whitespace-nowrap"
+        >
+          <MoreHorizontal className="size-3.5" />
+          <span>More</span>
+          <ChevronDown className="size-3 ml-0.5" />
+        </div>
+      </div>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button
-            data-tab={isMoreActive && activeMore ? activeMore.id : "more"}
-            role="tab"
-            aria-selected={isMoreActive}
-            className={cn(
-              "relative inline-flex h-8 shrink-0 items-center gap-1 rounded-full px-2 sm:px-2.5 text-xs sm:text-[12.5px] font-medium whitespace-nowrap transition-colors outline-none",
-              isMoreActive
-                ? "bg-card text-foreground shadow-xs ring-1 ring-border"
-                : "text-muted-foreground hover:bg-card/40 hover:text-foreground",
-            )}
-          >
-            {isMoreActive && activeMore ? (
-              (() => {
-                const ActiveIcon = ICONS[activeMore.id];
-                return <ActiveIcon className="size-3.5 text-forecast" aria-hidden />;
-              })()
-            ) : (
-              <MoreHorizontal className="size-3.5 opacity-70" aria-hidden />
-            )}
-            <span>{isMoreActive && activeMore ? activeMore.label : "More"}</span>
-            <ChevronDown className="size-3 opacity-60 ml-0.5" aria-hidden />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-52 p-1">
-          {MORE_TABS.map((t) => {
-            const Icon = ICONS[t.id];
-            const on = tab === t.id;
-            return (
-              <DropdownMenuItem
-                key={t.id}
-                onClick={() => onTab(t.id)}
+      <nav
+        ref={navRef}
+        aria-label="Views"
+        role="tablist"
+        className="relative flex flex-nowrap items-center gap-1 px-4 sm:px-6 lg:px-8 pb-2 overflow-x-hidden"
+      >
+        {visibleTabs.map((t) => {
+          const Icon = ICONS[t.id];
+          const on = tab === t.id;
+          return (
+            <button
+              key={t.id}
+              data-tab={t.id}
+              role="tab"
+              aria-selected={on}
+              onClick={() => onTab(t.id)}
+              className={cn(
+                "relative inline-flex h-8 shrink-0 items-center gap-1 rounded-full px-2 sm:px-2.5 text-xs sm:text-[12.5px] font-medium whitespace-nowrap transition-colors",
+                on
+                  ? "bg-card text-foreground shadow-xs ring-1 ring-border"
+                  : "text-muted-foreground hover:bg-card/40 hover:text-foreground",
+              )}
+            >
+              <Icon className={cn("size-3.5 transition-colors", on ? "text-forecast" : "opacity-70")} aria-hidden />
+              <span>{t.label}</span>
+            </button>
+          );
+        })}
+
+        {overflowTabs.length > 0 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                data-tab={isMoreActive && activeMore ? activeMore.id : "more"}
+                role="tab"
+                aria-selected={isMoreActive}
                 className={cn(
-                  "flex items-center gap-2 px-2.5 py-1.5 text-xs sm:text-sm cursor-pointer rounded-md",
-                  on ? "bg-accent font-medium text-foreground" : "text-muted-foreground hover:text-foreground",
+                  "relative inline-flex h-8 shrink-0 items-center gap-1 rounded-full px-2 sm:px-2.5 text-xs sm:text-[12.5px] font-medium whitespace-nowrap transition-colors outline-none",
+                  isMoreActive
+                    ? "bg-card text-foreground shadow-xs ring-1 ring-border"
+                    : "text-muted-foreground hover:bg-card/40 hover:text-foreground",
                 )}
               >
-                <Icon className={cn("size-4", on ? "text-forecast" : "opacity-70")} aria-hidden />
-                {t.label}
-              </DropdownMenuItem>
-            );
-          })}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </nav>
+                {isMoreActive && activeMore ? (
+                  (() => {
+                    const ActiveIcon = ICONS[activeMore.id];
+                    return <ActiveIcon className="size-3.5 text-forecast" aria-hidden />;
+                  })()
+                ) : (
+                  <MoreHorizontal className="size-3.5 opacity-70" aria-hidden />
+                )}
+                <span>{isMoreActive && activeMore ? activeMore.label : "More"}</span>
+                <ChevronDown className="size-3 opacity-60 ml-0.5" aria-hidden />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-52 p-1">
+              {overflowTabs.map((t) => {
+                const Icon = ICONS[t.id];
+                const on = tab === t.id;
+                return (
+                  <DropdownMenuItem
+                    key={t.id}
+                    onClick={() => onTab(t.id)}
+                    className={cn(
+                      "flex items-center gap-2 px-2.5 py-1.5 text-xs sm:text-sm cursor-pointer rounded-md",
+                      on ? "bg-accent font-medium text-foreground" : "text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    <Icon className={cn("size-4", on ? "text-forecast" : "opacity-70")} aria-hidden />
+                    {t.label}
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </nav>
+    </>
   );
 }
 
@@ -162,7 +255,7 @@ function Main({ tab, onTab }: { tab: TabId; onTab: (t: TabId) => void }) {
   return (
     <div className="min-w-0 flex-1">
       <header className="glass sticky top-0 z-20 border-b">
-        <div className="flex items-center justify-between gap-3 px-4 pt-3 pb-2 sm:px-6">
+        <div className="flex items-center justify-between gap-3 px-4 sm:px-6 lg:px-8 pt-3 pb-2">
           <div className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
             <span className="truncate">{brand.name}</span>
             <span aria-hidden>/</span>
@@ -173,13 +266,83 @@ function Main({ tab, onTab }: { tab: TabId; onTab: (t: TabId) => void }) {
               Developed by <span className="font-semibold text-foreground">Ankit</span>
             </span>
             <a
-              href="mailto:ankit.cybertron@proton.me"
+              href="https://github.com/ankit-cybertron/Celeris#readme"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-card/60 px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:bg-card hover:text-foreground cursor-pointer"
-              title="Contact Ankit (ankit.cybertron@proton.me)"
+              title="View GitHub Repository README"
             >
-              <Mail className="size-3" aria-hidden />
-              <span>Contact</span>
+              <BookOpen className="size-3" aria-hidden />
+              <span>Readme</span>
             </a>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-card/60 px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:bg-card hover:text-foreground cursor-pointer outline-none"
+                  title="Contact & Links"
+                >
+                  <Mail className="size-3" aria-hidden />
+                  <span>Contact</span>
+                  <ChevronDown className="size-3 opacity-60 ml-0.5" aria-hidden />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44 p-1.5">
+                <DropdownMenuItem asChild>
+                  <a
+                    href="mailto:ankit.cybertron@proton.me"
+                    className="flex items-center justify-between gap-2 px-2.5 py-1.5 text-xs cursor-pointer rounded-md text-foreground hover:bg-accent"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Mail className="size-3.5 text-forecast" />
+                      <span>Email</span>
+                    </div>
+                    <ExternalLink className="size-3 opacity-50" />
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a
+                    href="https://linkedin.com/in/ankitcybertron"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between gap-2 px-2.5 py-1.5 text-xs cursor-pointer rounded-md text-foreground hover:bg-accent"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Linkedin className="size-3.5 text-forecast" />
+                      <span>LinkedIn</span>
+                    </div>
+                    <ExternalLink className="size-3 opacity-50" />
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a
+                    href="https://portfolio.ankit-cybertron.workers.dev/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between gap-2 px-2.5 py-1.5 text-xs cursor-pointer rounded-md text-foreground hover:bg-accent"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Globe className="size-3.5 text-forecast" />
+                      <span>Portfolio</span>
+                    </div>
+                    <ExternalLink className="size-3 opacity-50" />
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a
+                    href="https://github.com/ankit-cybertron"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between gap-2 px-2.5 py-1.5 text-xs cursor-pointer rounded-md text-foreground hover:bg-accent"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Github className="size-3.5 text-forecast" />
+                      <span>GitHub</span>
+                    </div>
+                    <ExternalLink className="size-3 opacity-50" />
+                  </a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <button
               onClick={toggle}
               aria-label={mode === "dark" ? "Switch to light theme" : "Switch to dark theme"}
@@ -191,7 +354,7 @@ function Main({ tab, onTab }: { tab: TabId; onTab: (t: TabId) => void }) {
         </div>
         <TabNav tab={tab} onTab={onTab} />
       </header>
-      <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
+      <main className="w-full px-4 sm:px-6 lg:px-8 py-6">
         <div key={`h-${tab}`} className="animate-rise mb-5 flex flex-wrap items-end justify-between gap-3">
           <div className="min-w-0">
             <h1 className="text-gradient text-2xl font-semibold tracking-tight sm:text-[28px]">{label}</h1>
