@@ -42,7 +42,7 @@ export function DataHealthView() {
         <Kpi label="Raw rows" value={fmtNum(s.raw_rows)} sub={fmtInt(s.raw_rows)} />
         <Kpi tone="success" label="Observed rows after cleaning" value={fmtNum(s.clean_observed_rows)} sub={`Panel rows ${fmtInt(s.panel_rows)}`} />
         <Kpi tone="warning" label="Issue types" value={new Set(dq.issues.map((i) => i.issue)).size} sub={`${fmtInt(dq.issues.reduce((a, i) => a + i.rows_affected, 0))} rows affected`} />
-        <Kpi tone="history" label="Series" value={fmtInt(s.series)} sub="SKU × region × channel × customer" />
+        <Kpi tone="history" label="Series" value={fmtInt(s.series)} sub="SKU × Region grid (3,083 active series)" />
       </KpiGrid>
 
       <div className="grid gap-4 xl:grid-cols-5">
@@ -80,7 +80,7 @@ export function DataHealthView() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-5">
-        <Panel className="xl:col-span-2" title="Before vs after cleaning">
+        <Panel className="xl:col-span-2" title="Before vs after cleaning" subtitle="248,248 raw - 3,682 dups - 46 dropped + 70 stockout-recovered = 244,590 observed">
           <SortableTable
             rows={compare}
             rowKey={(r) => r.k}

@@ -50,7 +50,7 @@ export function InsightsView() {
       </section>
 
       <KpiGrid>
-        <Kpi tone="danger" label="Stockout lost revenue" value={fmtMoney(i.stockouts?.lost_revenue)} sub={`${fmtNum(i.stockouts?.lost_units)} units lost`} />
+        <Kpi tone="danger" label="Logged stockout losses" value={fmtMoney(i.stockouts?.lost_revenue)} sub={`${fmtNum(i.stockouts?.lost_units)} units (formal records)`} />
         <Kpi tone="history" label="Price effect in plan" value={i.price_effect?.price_change_pct != null ? `${i.price_effect.price_change_pct > 0 ? "+" : ""}${i.price_effect.price_change_pct.toFixed(1)}%` : "–"} sub="announced January price rises" />
         <Kpi tone="warning" label="Lifecycle changes" value={`${i.lifecycle?.eol ?? 0} EOL · ${i.lifecycle?.launches ?? 0} new`} sub={`${i.lifecycle?.discontinued ?? 0} discontinued`} />
         <Kpi tone="forecast" label="Strongest macro leader" value={leaders[0]?.indicator.replace(/_/g, " ") ?? "–"} sub={leaders[0] ? `${leaders[0].family} · lag ${leaders[0].best_lag}m · r ${leaders[0].corr.toFixed(2)}` : undefined} />

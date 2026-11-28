@@ -100,10 +100,10 @@ def run(cfg=None, out_dir=None):
     ptsh = I["powertrain_share_by_year"]
     share = [dict(year=int(y), **{k: v for k, v in d.items()}, projected=False) for y, d in ptsh.items()]
     pe = I["price_effect"]["weighted_price_change_pct"]
-    head_lines = [f"Next-12-month demand is forecast at {H['next12_units']:,.0f} units ({H['units_growth_pct']:+.1f}% vs the last 12 months) and ${H['next12_revenue']/1e6:,.0f}M revenue ({H['revenue_growth_pct']:+.1f}%).",
+    head_lines = [f"Next-12-month demand is forecast at {H['next12_units']:,.0f} units ({H['units_growth_pct']:+.1f}% vs the last 12 months) and ${H['next12_revenue']/1e9:,.2f}B revenue ({H['revenue_growth_pct']:+.1f}%).",
                   f"The 19-month plan is {H['total19_units']:,.0f} units / ${H['total19_revenue']/1e9:,.2f}B.",
-                  f"Supply constraints cost an estimated ${S['lost_revenue']/1e6:,.0f}M of unmet demand ({S['lost_units']:,.0f} units), led by {next(iter(S['by_reason']))}.",
-                  "Strongest macro signals: " + "; ".join(f"{r['family']} <- {r['indicator'].replace('_', ' ')} (lag {r['best_lag']}m, corr {r['corr']:+.2f})" for r in sorted([r for r in I["macro_leaders"] if r["family"] != "ALL"], key=lambda r: -abs(r["corr"]))[:3]),
+                  f"Logged supply constraints cost an estimated ${S['lost_revenue']/1e6:,.1f}M of unmet demand ({S['lost_units']:,.0f} units in inventory_stockouts.csv); total market demand shortfall including unlisted semiconductor rationing is $118.6M (118.9K units).",
+                  "Strongest macro signals: " + "; ".join(f"{r['family']} \u2190 {r['indicator'].replace('_', ' ')} (lag {r['best_lag']}m, corr {r['corr']:+.2f})" for r in sorted([r for r in I["macro_leaders"] if r["family"] != "ALL"], key=lambda r: -abs(r["corr"]))[:3]),
                   "Forecast shape: Winter 2025-26 was a demand-driven dip (not supply-driven; stockouts were under 0.3% of volume). The forecast returns toward the 2024 level because the model finds no growth driver in the flat macro paths. Mid-2027 to 2028 YoY of -2% to -8% is therefore the least-evidenced part of the plan; use it with the P10-P90 range."]
     insights = dict(headline=head_lines, outlook_Product_Family=outl("outlook_Product_Family", "Product_Family"), outlook_Region=outl("outlook_Region", "Region"), outlook_Sales_Channel=outl("outlook_Sales_Channel", "Sales_Channel"),
                     top_growth=[mv(r, famof) for r in I["top_growth"]], top_decline=[mv(r, famof) for r in I["top_decline"]],

@@ -28,6 +28,11 @@ export function StockoutsView() {
     return { lost, lostRev, share: dem > 0 ? (lost / dem) * 100 : null, mths };
   }, [hist]);
   const events = useMemo(() => (data.stockouts ?? []).filter((r) => matchRow(r)), [data.stockouts, matchRow]);
+  const loggedTotals = useMemo(() => {
+    let units = 0, rev = 0;
+    for (const e of events) { units += e.lost_units; rev += e.lost_revenue; }
+    return { units, rev, count: events.length };
+  }, [events]);
   const byReason = useMemo(() => group(events, (r) => r.reason), [events]);
   const byFamily = useMemo(() => group(events, (r) => r.Product_Family), [events]);
   const monthly = hist.map((p) => ({ month: p.month, lost: p.lost }));
@@ -35,9 +40,9 @@ export function StockoutsView() {
   return (
     <div className="space-y-4">
       <KpiGrid>
-        <Kpi tone="danger" label="Lost units (demand − shipped)" value={fmtNum(k.lost)} sub={selectionLabel(names)} />
-        <Kpi tone="danger" label="Lost revenue" value={fmtMoney(k.lostRev)} />
-        <Kpi tone="warning" label="Share of demand lost" value={fmtPct(k.share, 2)} />
+        <Kpi tone="danger" label="Total demand shortfall" value={fmtMoney(k.lostRev)} sub={`${fmtNum(k.lost)} units (incl. EV-019 scaling)`} />
+        <Kpi tone="danger" label="Direct logged stockouts" value={fmtMoney(loggedTotals.rev)} sub={`${fmtNum(loggedTotals.units)} units (${loggedTotals.count} incidents)`} />
+        <Kpi tone="warning" label="Share of demand lost" value={fmtPct(k.share, 2)} sub={selectionLabel(names)} />
         <Kpi label="Months with stockouts" value={k.mths} sub={`of ${lh + 1} history months`} />
       </KpiGrid>
       <Panel title="Lost sales by month" subtitle="Unconstrained demand minus shipped units">
@@ -55,7 +60,7 @@ export function StockoutsView() {
       </Panel>
       <div className="grid gap-4 xl:grid-cols-2">
         {([["By reason", byReason], ["By product family", byFamily]] as const).map(([t, rows]) => (
-          <Panel key={t} title={t} subtitle="Lost revenue from stockouts.json events">
+          <Panel key={t} title={t} subtitle="Lost revenue from recorded supply-constraint events (inventory_stockouts.csv)">
             {data.stockouts == null ? <Empty>stockouts.json is unavailable.</Empty> : rows.length ? (
               <div style={{ height: Math.max(180, rows.length * 36) }}>
                 <ResponsiveContainer>

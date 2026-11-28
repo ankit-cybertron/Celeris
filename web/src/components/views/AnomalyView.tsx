@@ -7,6 +7,23 @@ import { axisProps, C, GenericTip, Timeline, timelineRows } from "@/components/d
 import { fmtNum, fmtPct } from "@/lib/format";
 import type { AnomalyRow, EventRow } from "@/lib/types";
 
+const TYPE_LABELS: Record<string, string> = {
+  master_conflict_sales_before_launch: "Sales Before Launch (Master Conflict)",
+  stockout_shipped_override: "Stockout Shipped Override",
+  ordering_cycle_change: "Ordering Cycle Change",
+  customer_switch: "Customer Switch",
+  lost_account: "Lost Account",
+  structural_break: "Structural Level Shift",
+  early_buying_price_rise: "Pre-Buying (Price Rise)",
+  units_from_revenue: "Units from Revenue",
+  test_rows_after_EOL: "Test Rows After EOL",
+  spike: "Demand Spike (>4x)",
+};
+
+export function formatTypeLabel(t: string): string {
+  return TYPE_LABELS[t] ?? t.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 export function AnomalyView() {
   const { data, pts, names, matchRow } = useDashboard();
   const { months, last_hist: lh } = data.cube;
@@ -74,7 +91,7 @@ export function AnomalyView() {
                   className="size-3.5 accent-primary"
                 />
                 <span className="inline-block size-2.5 rounded-full" style={{ background: color(t) }} />
-                {t}
+                {formatTypeLabel(t)}
               </label>
             ))}
           </fieldset>
@@ -92,7 +109,7 @@ export function AnomalyView() {
               <div className="mt-2 space-y-1.5 border-t pt-2">
                 {list.slice(0, 4).map((a) => (
                   <div key={a.anomaly_id}>
-                    <div className="flex items-center gap-1.5 font-medium"><span className="inline-block size-2 rounded-full" style={{ background: color(a.type) }} />{a.type} · {a.SKU_ID ?? "all"}{a.Region ? ` · ${a.Region}` : ""}</div>
+                    <div className="flex items-center gap-1.5 font-medium"><span className="inline-block size-2 rounded-full" style={{ background: color(a.type) }} />{formatTypeLabel(a.type)} · {a.SKU_ID ?? "all"}{a.Region ? ` · ${a.Region}` : ""}</div>
                     <div className="text-muted-foreground">{a.reason}</div>
                     <div className="text-muted-foreground">→ {a.action}</div>
                   </div>
@@ -103,16 +120,16 @@ export function AnomalyView() {
           }}
         >
           {types.filter((t) => !off.has(t)).map((t) => (
-            <Line key={t} dataKey={`a_${t}`} name={t} stroke="transparent" legendType="none" dot={{ r: 5, fill: color(t), stroke: "var(--card)", strokeWidth: 1.5 }} activeDot={{ r: 7, fill: color(t) }} {...chartAnim()} />
+            <Line key={t} dataKey={`a_${t}`} name={formatTypeLabel(t)} stroke="transparent" legendType="none" dot={{ r: 5, fill: color(t), stroke: "var(--card)", strokeWidth: 1.5 }} activeDot={{ r: 7, fill: color(t) }} {...chartAnim()} />
           ))}
         </Timeline>
       </Panel>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <Panel title="Anomalies by type" subtitle="In the current selection">
+        <Panel title="Anomalies by type" subtitle="All anomaly types across selection (unfiltered)">
           <SmallBars data={byType} x="type" y="count" colorOf={(d) => color(String(d.type))} />
         </Panel>
-        <Panel title="Anomalies by year" subtitle="Types currently shown">
+        <Panel title="Anomalies by year" subtitle="Types currently active in filter">
           <SmallBars data={byYear} x="year" y="count" colorOf={() => C.history} />
         </Panel>
       </div>
@@ -125,7 +142,7 @@ export function AnomalyView() {
           limit={100}
           cols={[
             { key: "id", label: "ID", value: (r) => r.anomaly_id },
-            { key: "type", label: "Type", value: (r) => r.type, render: (r) => <span className="flex items-center gap-1.5"><span className="inline-block size-2 rounded-full" style={{ background: color(r.type) }} />{r.type}</span> },
+            { key: "type", label: "Type", value: (r) => r.type, render: (r) => <span className="flex items-center gap-1.5"><span className="inline-block size-2 rounded-full" style={{ background: color(r.type) }} />{formatTypeLabel(r.type)}</span> },
             { key: "class", label: "Class", value: (r) => r.class, render: (r) => <Badge tone={/error/i.test(r.class) ? "danger" : /event/i.test(r.class) ? "history" : "muted"}>{r.class}</Badge> },
             { key: "date", label: "Start", value: (r) => r.date_start },
             { key: "end", label: "End", value: (r) => r.date_end },
@@ -163,18 +180,43 @@ export function AnomalyView() {
 function SmallBars<T extends Record<string, unknown>>({ data, x, y, colorOf }: { data: T[]; x: string; y: string; colorOf: (d: T) => string }) {
   if (!data.length) return <Empty />;
   const isType = x === "type";
+  if (isType) {
+    return (
+      <div style={{ height: Math.max(240, data.length * 32) }}>
+        <ResponsiveContainer>
+          <BarChart data={data} layout="vertical" margin={{ left: 8, right: 16 }}>
+            <CartesianGrid stroke={C.grid} strokeDasharray="3 3" horizontal={false} />
+            <XAxis type="number" allowDecimals={false} {...axisProps} />
+            <YAxis
+              type="category"
+              dataKey={x}
+              width={180}
+              {...axisProps}
+              tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
+              tickFormatter={(v: string) => formatTypeLabel(v)}
+            />
+            <Tooltip content={<GenericTip />} cursor={{ fill: "var(--muted)" }} />
+            <Bar dataKey={y} name="Anomalies" radius={[0, 3, 3, 0]} {...chartAnim()} shape={(p: unknown) => {
+              const { x: bx, y: by, width, height, payload } = p as { x: number; y: number; width: number; height: number; payload: T };
+              return <rect x={bx} y={by} width={width} height={height} rx={3} fill={colorOf(payload)} />;
+            }} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  }
   return (
-    <div className={isType ? "h-64" : "h-56"}>
+    <div className="h-56">
       <ResponsiveContainer>
-        <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: isType ? 20 : 8 }}>
+        <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 8 }}>
           <CartesianGrid stroke={C.grid} strokeDasharray="3 3" vertical={false} />
           <XAxis
             dataKey={x}
             {...axisProps}
             interval={0}
-            angle={isType ? -30 : -25}
+            angle={-25}
             textAnchor="end"
-            height={isType ? 45 : 32}
+            height={32}
             tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
             tickFormatter={(v: string) => (String(v) === "Series-level" ? "Series lvl" : String(v).replace(/_/g, " "))}
           />
