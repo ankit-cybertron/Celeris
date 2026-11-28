@@ -55,8 +55,11 @@ def croston_sba(Y: np.ndarray, o: int, alpha: float = 0.1) -> np.ndarray:
 def fit_lgbm(train: pd.DataFrame, X: list[str], cfg: dict, objective: str = "l1", alpha: float | None = None):
     m = cfg["model"]
     params = dict(objective=objective, n_estimators=m["n_estimators"], learning_rate=m["learning_rate"],
-                  num_leaves=m["num_leaves"], min_child_samples=m["min_child_samples"], subsample=0.8, subsample_freq=1,
-                  colsample_bytree=0.8, random_state=m["seed"], verbose=-1, n_jobs=2)
+                  num_leaves=m["num_leaves"], min_child_samples=m["min_child_samples"],
+                  subsample=m.get("subsample", 0.8), subsample_freq=1,
+                  colsample_bytree=m.get("colsample_bytree", 0.8),
+                  random_state=m["seed"], verbose=-1,
+                  n_jobs=m.get("n_jobs", -1))  # CFG-1: read from config; default -1 (all cores)
     if alpha is not None:
         params["alpha"] = alpha
     mdl = lgb.LGBMRegressor(**params)

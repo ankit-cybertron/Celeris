@@ -28,7 +28,9 @@ def learn_eol_decay(panel: pd.DataFrame, sku: pd.DataFrame, n: int = 6) -> np.nd
             rat.append([d.get(e - k, np.nan) / base for k in range(n)])
     if not rat:
         return np.ones(n)
-    d = np.clip(np.nanmedian(np.array(rat), axis=0), 0, 1.0)
+    # FC-1 fix: allow EOL decay > 1.0 to capture genuine last-time-buy (LTB) surges.
+    # Clipping at 1.0 previously hid cases where SKUs saw elevated demand before discontinuation.
+    d = np.clip(np.nanmedian(np.array(rat), axis=0), 0, 1.5)
     return np.minimum.accumulate(d[::-1])[::-1]      # monotone wind-down: closer to EOL => lower
 
 
@@ -95,7 +97,10 @@ def apply_rules(f: pd.DataFrame, panel: pd.DataFrame, sku: pd.DataFrame, events:
     for eid, spec in (cfg.get("planned_events") or {}).items():
         e = events[events.Event_ID == eid].iloc[0]
         s, en = midx(str(e.Start_Date)[:7]), midx(str(e.End_Date)[:7])
-        c, rg = [x.strip() for x in e.Scope_Value.split("|")]
+        # FC-2 fix: guard against missing '|' separator in Scope_Value
+        parts = [x.strip() for x in e.Scope_Value.split("|", 1)]
+        assert len(parts) == 2, f"R3 planned event {eid}: Scope_Value '{e.Scope_Value}' must contain '|' (Customer|Region)"
+        c, rg = parts
         m = (f.Customer_Name == c) & (f.Region == rg) & f.mi.between(s, en)
         f.loc[m, ["p10", "p50", "p90"]] = f.loc[m, ["p10", "p50", "p90"]].to_numpy() * spec["multiplier"]
         f.loc[m, "rule"] = f"R3_{eid}"
@@ -141,7 +146,7 @@ def run(cfg=None, fast: bool = False):
         if new not in lastp.index and old in lastp.index:
             lastp.loc[new] = lastp[old]
     rise = F.price_rise_vector(events)
-    pf = np.cumprod([1 + (rise[i] / 100 if (i - 0) % 12 == 0 and i >= N_HIST else 0) for i in range(N_HIST, N_HIST + HORIZON)])
+    pf = np.cumprod([1 + (rise[i] / 100 if i % 12 == 0 and i >= N_HIST else 0) for i in range(N_HIST, N_HIST + HORIZON)])
     f["Price_Forecast"] = f.SKU_ID.map(lastp).to_numpy() * pf[(f.mi - N_HIST).to_numpy()]
     f["Revenue_P50"] = f.p50 * f.Price_Forecast
     f["Product_Family"] = f.SKU_ID.map(sku.set_index("SKU_ID").Product_Family)
@@ -156,6 +161,7 @@ def run(cfg=None, fast: bool = False):
     assert (sub[["Date", "SKU_ID", "Region"]].to_numpy() == test[["Date", "SKU_ID", "Region"]].to_numpy()).all(), "order/keys differ from test.csv"
     out.mkdir(parents=True, exist_ok=True)
     sub.to_csv(out / "submission.csv", index=False)
+    sub.to_csv(cfg["paths"]["raw"].resolve().parents[1] / "submission.csv", index=False)
     keep = ["Date", "mi", "SKU_ID", "Region", "Product_Family", "Customer_Name", "Sales_Channel", "p10", "p50", "p90", "Units_Sold_Forecast", "Price_Forecast", "Revenue_P50", "rule", "h"]
     f[keep].to_parquet(cfg["paths"]["processed"] / "forecast_full.parquet", index=False)
     json.dump(audit, open(out / "forecast_audit.json", "w"), indent=2, default=str)

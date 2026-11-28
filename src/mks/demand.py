@@ -28,12 +28,21 @@ def estimate_unconstrained(panel: pd.DataFrame, events: pd.DataFrame, max_uplift
             continue
         inwin = (p.Product_Family == scope_val) & (p.Date >= s) & (p.Date <= e)
         listed = inwin & p.Requested_Units.notna() & p.Units_Clean.notna()
-        fill = (p[listed].groupby("Date").apply(lambda g: g.Units_Clean.sum() / max(g.Requested_Units.sum(), 1), include_groups=False)).clip(lower=1 / max_uplift, upper=1.0)
+        # D-1 fix: compute raw fill ratio; NaN where total supply failure (all shipped=0) so unlisted
+        # rows in a total-failure month are skipped rather than inflated to 3× max_uplift.
+        fill_raw = p[listed].groupby("Date").apply(
+            lambda g: g.Units_Clean.sum() / max(g.Requested_Units.sum(), 1), include_groups=False
+        )
+        fill = fill_raw.where(fill_raw > 0).clip(upper=1.0)   # NaN if total failure; skip those months
         unl = inwin & p.Requested_Units.isna() & p.Units_Clean.notna()
         f = p.Date.map(fill)
         est = unl & f.notna()
         p.loc[est, "Demand_Unconstrained"] = p.loc[est, "Units_Clean"] / f[est]
         p.loc[est, "Demand_Source"] = "estimated_unconstrained"
+        # D-2 fix: zero-shipped unlisted rows in supply-constraint window are constrained zeros,
+        # not genuine zero demand — mark source so training treats them as NaN.
+        est_zero = unl & (p.Units_Clean == 0)
+        p.loc[est_zero, "Demand_Source"] = "estimated_zero_stockout"
     return p
 
 

@@ -19,6 +19,10 @@ model:
   learning_rate: 0.05
   num_leaves: 63
   min_child_samples: 50
+  subsample: 0.8              # CFG-1: moved from hardcoded models.py
+  colsample_bytree: 0.8       # CFG-1: moved from hardcoded models.py
+  n_jobs: -1                  # CFG-1: -1 uses all available cores (was 2)
+  shrinkage_k: 24             # I-2: Bayesian shrinkage constant w = n/(n+k)
   train_origin_step: 3
   train_origin_start: 30
   backtest_origins: ["2024-04", "2025-03"]

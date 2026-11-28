@@ -98,7 +98,9 @@ def clean_all(cfg: dict | None = None) -> dict:
     stock = stock.copy()
     stock["Date"] = stock.Date.map(dates.parse_month)
     ident = (stock.Requested_Units + stock.Carried_In_Units - stock.Shipped_Units - stock.Backordered_Units - stock.Lost_Units).abs()
-    dq.add("inventory_stockouts.csv", "identity Requested+CarriedIn-Shipped-Backordered-Lost != 0", (ident > 0).sum(), "n/a (file is consistent)", severity="info")
+    n_id_violated = int((ident > 0).sum())
+    dq.add("inventory_stockouts.csv", "identity Requested+CarriedIn-Shipped-Backordered-Lost != 0", n_id_violated,
+           "file consistent" if n_id_violated == 0 else f"{n_id_violated} rows fail identity; treated as observation noise", severity="info")
     sk = stock.rename(columns={"SKU_ID": "SKU_ID", "Region": "Region"})[["Date", "SKU_ID", "Region", "Requested_Units", "Carried_In_Units", "Shipped_Units", "Backordered_Units", "Lost_Units", "Fill_Rate_Pct", "Stockout_Days", "Reason"]]
     t = t.merge(sk, on=["Date", "SKU_ID", "Region"], how="left")
     ov = t.Shipped_Units.notna() & (t.Units_Clean.isna() | (t.Units_Clean != t.Shipped_Units))
@@ -140,7 +142,8 @@ def clean_all(cfg: dict | None = None) -> dict:
     p["Product_Family"] = p.SKU_ID.map(sku_m.Product_Family)
     p["Business_Unit"] = p.SKU_ID.map(sku_m.Business_Unit)
     p["Price_Clean"] = p.Price_Clean.fillna(p.groupby(["SKU_ID", "Date"]).Price_Clean.transform("median"))   # rule 4: same price in every region
-    p["Price_Clean"] = p.Price_Clean.fillna(p.groupby(["SKU_ID"]).Price_Clean.transform(lambda s: s.ffill().bfill()))
+    # C-2 fix: limit=12 prevents indefinitely stale prices from pre-change periods carrying forward.
+    p["Price_Clean"] = p.Price_Clean.fillna(p.groupby(["SKU_ID"]).Price_Clean.transform(lambda s: s.ffill(limit=12).bfill(limit=12)))
     p["Demand_Unconstrained"] = np.where(p.Requested_Units.notna(), p.Requested_Units, p.Units_Clean)
     p["Revenue_Clean"] = p.Units_Clean * p.Price_Clean
     p["fix_flags"] = p.fix_flags.fillna("")

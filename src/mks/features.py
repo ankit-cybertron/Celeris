@@ -84,8 +84,12 @@ def _stats(ctx: Ctx, o: int):
     with np.errstate(all="ignore"):
         f["sd12"] = np.nanstd(h[:, -12:], axis=1)
         f["z12"] = nm(np.where(np.isnan(h[:, -12:]), np.nan, (h[:, -12:] == 0).astype(float)))
-        f["g6"] = f["m6"] / (nm(h[:, -12:-6]) + 1)
-        f["g12"] = f["m12"] / (nm(h[:, -24:-12]) + 1)
+        # F-3 fix: +1 denominator suppressed growth ratio for low-volume SKUs (e.g. 5-unit mean →
+        # g12=0.83 instead of 1.0). Use NaN where denominator is zero so LightGBM skips it.
+        denom6 = nm(h[:, -12:-6])
+        denom12 = nm(h[:, -24:-12])
+        f["g6"] = np.where(denom6 > 0, f["m6"] / denom6, np.nan)
+        f["g12"] = np.where(denom12 > 0, f["m12"] / denom12, np.nan)
     first = np.where((~np.isnan(h)).any(1), np.argmax(~np.isnan(h), axis=1), o)
     f["age"] = o - first
     prof = np.full((N, 12), np.nan)
@@ -106,8 +110,11 @@ def _stats(ctx: Ctx, o: int):
     for w in (6, 12, 24):
         f[f"mnz{w}"] = nm(pos[:, -w:])
     nz = seg > 0
-    last = np.where(nz.any(1), W - 1 - np.argmax(nz[:, ::-1], axis=1), W)
-    f["since_nz"] = W - 1 - last
+    # F-1 fix: all-zero or all-NaN series produced since_nz=-1 (nonsensical).
+    # Now NaN for series with no positive history (LightGBM handles NaN correctly).
+    has_nz = nz.any(1)
+    steps_from_end = np.argmax(nz[:, ::-1], axis=1)   # 0 = most recent nonzero
+    f["since_nz"] = np.where(has_nz, steps_from_end.astype(float), np.nan)
     return f, prof, ph
 
 
@@ -132,7 +139,9 @@ def build(ctx: Ctx, o: int, hs, with_y: bool = True) -> pd.DataFrame:
         d["hol"] = ctx.HOL[ctx.reg_idx, tm]
         mo = tm % 12
         jan_next = ctx.rise[tm - mo + 12] if tm - mo + 12 < T_ALL else 0.0
-        d["rise_next_jan"] = np.full(N, jan_next if mo >= 8 else 0.0)
+        # F-2 fix: mo is 0-indexed (0=Jan … 7=Aug). Original `mo >= 8` only activated from Sep,
+        # missing August pull-forward. Changed to `mo >= 7` to include August (5-month lead).
+        d["rise_next_jan"] = np.full(N, jan_next if mo >= 7 else 0.0)
         d["rise_this_jan"] = np.full(N, ctx.rise[tm] if mo == 0 else 0.0)
         d["m_to_eol"] = np.clip(ctx.eol - tm, -1, 60)
         d["m_since_launch"] = np.clip(tm - ctx.launch, -1, 120)

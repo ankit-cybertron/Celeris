@@ -17,7 +17,7 @@ EV-019,Supply Constraint,Product_Family:Electrical Assemblies,2021-03,2022-09,Gl
 EV-020,Holiday,Region:Middle East & Africa,2021-04,2021-05,Ramadan,0.0,,
 EV-021,Holiday,Region:North America,2021-07,2021-07,North American summer retooling weeks,19831.0,30384.0,-34.73209583991574
 EV-022,Holiday,Region:Europe,2021-08,2021-08,European summer plant shutdowns,12994.0,28505.75,-54.416214272559046
-EV-024,Market Entry,Region:Middle East & Africa,2022-01,2022-01,Celeris opens Middle East & Africa sales region,1508.0,9734.0,-84.50791041709472
+EV-024,Market Entry,Region:Middle East & Africa,2022-01,2022-01,Celeris opens Middle East & Africa sales region,1508.0,9734.0,
 EV-025,Holiday,Region:Asia Pacific,2022-02,2022-02,Lunar New Year holiday period,14309.0,22839.25,-37.34908107753101
 EV-026,Holiday,Region:Middle East & Africa,2022-04,2022-05,Ramadan,10308.0,11026.5,-6.516120255747515
 EV-028,Holiday,Region:North America,2022-07,2022-07,North American summer retooling weeks,14655.0,25598.5,-42.75055179014395
@@ -43,11 +43,11 @@ EV-054,Holiday,Region:Asia Pacific,2026-02,2026-02,Lunar New Year holiday period
 EV-055,Holiday,Region:Middle East & Africa,2026-02,2026-03,Ramadan,22358.0,25630.5,-12.767991260412403
 EV-056,Holiday,Region:North America,2026-07,2026-07,North American summer retooling weeks,19042.0,29642.25,-35.760611964341436
 EV-057,Holiday,Region:Europe,2026-08,2026-08,European summer plant shutdowns,14015.0,30779.25,-54.466076983682186
-EV-060,Holiday,Region:Asia Pacific,2027-02,2027-02,Lunar New Year holiday period,0.0,,
-EV-061,Holiday,Region:Middle East & Africa,2027-02,2027-03,Ramadan,0.0,,
-EV-062,Customer Event,Customer:Orion Driveline | North America,2027-07,2027-08,Planned retooling shutdown at Orion Driveline North American plants,0.0,6221.0,-100.0
-EV-063,Holiday,Region:North America,2027-07,2027-07,North American summer retooling weeks,0.0,,
-EV-064,Holiday,Region:Europe,2027-08,2027-08,European summer plant shutdowns,0.0,,
-EV-066,Holiday,Region:Asia Pacific,2028-01,2028-02,Lunar New Year holiday period,0.0,,
-EV-067,Holiday,Region:Middle East & Africa,2028-01,2028-02,Ramadan,0.0,,
-EV-068,Holiday,Region:Europe,2028-08,2028-08,European summer plant shutdowns,0.0,,
+EV-060,Holiday,Region:Asia Pacific,2027-02,2027-02,Lunar New Year holiday period,,,
+EV-061,Holiday,Region:Middle East & Africa,2027-02,2027-03,Ramadan,,,
+EV-062,Customer Event,Customer:Orion Driveline | North America,2027-07,2027-08,Planned retooling shutdown at Orion Driveline North American plants,,,-78.0
+EV-063,Holiday,Region:North America,2027-07,2027-07,North American summer retooling weeks,,,
+EV-064,Holiday,Region:Europe,2027-08,2027-08,European summer plant shutdowns,,,
+EV-066,Holiday,Region:Asia Pacific,2028-01,2028-02,Lunar New Year holiday period,,,
+EV-067,Holiday,Region:Middle East & Africa,2028-01,2028-02,Ramadan,,,
+EV-068,Holiday,Region:Europe,2028-08,2028-08,European summer plant shutdowns,,,

@@ -40,7 +40,7 @@ def run(cfg=None, out_dir=None):
                 u=h.Units_Clean.round(0).fillna(-1).astype(int).tolist(), d=h.Demand_Unconstrained.round(0).fillna(-1).astype(int).tolist(),
                 r=h.rev.round(0).fillna(-1).astype(int).tolist(), miss=(h.row_status == "missing").astype(int).tolist())
     fc = dict(m=f.Date.map(mi).tolist(), sku=f.SKU_ID.map(ix["sku"]).tolist(), reg=f.Region.map(ix["region"]).tolist(), ch=f.Sales_Channel.map(ix["channel"]).tolist(),
-              cus=f.Customer_Name.map(ix["customer"]).fillna(-1).astype(int).tolist(), p10=f.p10.round(1).tolist(), p50=f.p50.round(1).tolist(), p90=f.p90.round(1).tolist(),
+              cus=f.Customer_Name.map(ix["customer"]).fillna(-1).astype(int).tolist(), p10=f.p10.round(1).tolist(), p50=np.rint(f.p50).astype(int).tolist(), p90=f.p90.round(1).tolist(),
               r=f.Revenue_P50.round(0).tolist(), rule=f.rule.fillna("").map({r: i + 1 for i, r in enumerate(rules)}).fillna(0).astype(int).tolist())
     _dump(dict(months=months, last_hist=mi["2026-10"], dims=dims, sku_family=sku_fam, rules=rules, hist=hist, fc=fc), D / "cube.json")
 
@@ -68,7 +68,9 @@ def run(cfg=None, out_dir=None):
     fi = pd.read_csv(O / "feature_importance.csv"); fi.columns = ["feature", "split_count"]; fi = fi.sort_values("split_count", ascending=False).head(15)
     fi["gain"] = (fi.split_count / fi.split_count.sum()).round(4)
     agg = pd.read_csv(b / "aggregate_wape.csv").iloc[0].value
-    cov = pd.read_csv(b / "interval_coverage.csv").set_index("0" if "0" in pd.read_csv(b / "interval_coverage.csv").columns else pd.read_csv(b / "interval_coverage.csv").columns[0]).iloc[:, 0]
+    # E-2 fix: read once, detect column, avoid triple re-read with fragile inline logic
+    _cov_df = pd.read_csv(b / "interval_coverage.csv")
+    cov = _cov_df.set_index(_cov_df.columns[0]).iloc[:, 0]
     sc = pd.read_csv(b / "intervals_scale.csv").round(4)
     _dump(dict(overall=_clean(ov), by_dim=_clean(bd),
                aggregate=[dict(metric="Family x Region x Month WAPE", method="Global LightGBM", value=round(float(agg), 4))],

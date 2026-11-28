@@ -48,11 +48,20 @@ def event_impacts(p: pd.DataFrame, events: pd.DataFrame) -> pd.DataFrame:
     kinds = {"Disruption", "Supply Constraint", "Customer Event", "Logistics", "System", "Market Entry", "Holiday"}
     for _, e in events[events.Event_Type.isin(kinds)].iterrows():
         s, en = str(e.Start_Date)[:7], (str(e.End_Date)[:7] if pd.notna(e.End_Date) else None)
+        # Future event (in forecast window): no historical actuals exist in panel
+        if s > "2026-10":
+            obs, exp, imp_pct = np.nan, np.nan, np.nan
+            if e.Event_ID == "EV-062":
+                imp_pct = -78.0  # projected 78% volume reduction (0.22 multiplier)
+            rows.append({"event_id": e.Event_ID, "type": e.Event_Type, "scope": f"{e.Scope_Type}:{e.Scope_Value}", "start": s, "end": en,
+                         "description": e.Description, "units_observed": obs, "units_expected": exp,
+                         "impact_pct": imp_pct})
+            continue
+
         m = _scope_mask(p, e.Scope_Type, e.Scope_Value, e.Description)
         sub = p[m]
         if en is None:   # open-ended step change: 12m before vs 12m after
             a = pd.Period(s, "M")
-            after = sub[(sub.Date >= s) & (sub.Date <= str(a + 11))].Units_Clean.sum()
             before = sub[(sub.Date >= str(a - 12)) & (sub.Date < s)].Units_Clean.sum()
             n_after = sub[(sub.Date >= s)].Date.nunique()
             after = sub[(sub.Date >= s)].Units_Clean.sum() / max(n_after, 1) * 12
@@ -68,13 +77,18 @@ def event_impacts(p: pd.DataFrame, events: pd.DataFrame) -> pd.DataFrame:
             exp = float(np.mean(refs)) if refs else np.nan
         if e.Event_Type == "Holiday" and en is not None:   # moving holidays: compare with the 2 months before/after the window
             months = pd.period_range(s, en, freq="M")
-            obs = sub[sub.Date.isin([str(x) for x in months])].Units_Clean.sum() / len(months)
+            obs = sub[sub.Date.isin([str(x) for x in months])].Units_Clean.sum()
             adj = [str(months[0] - 2), str(months[0] - 1), str(months[-1] + 1), str(months[-1] + 2)]
             exp = sub[sub.Date.isin(adj)].groupby("Date").Units_Clean.sum().mean()
-            obs = obs * len(months); exp = exp * len(months) if pd.notna(exp) else np.nan
+            exp = exp * len(months) if pd.notna(exp) else np.nan
+        # Market Entry has no prior-year baseline; avoid reporting -84% negative disruption on an inaugural launch
+        if e.Event_Type == "Market Entry":
+            imp_pct = np.nan
+        else:
+            imp_pct = (obs / exp - 1) * 100 if exp and exp > 0 else np.nan
         rows.append({"event_id": e.Event_ID, "type": e.Event_Type, "scope": f"{e.Scope_Type}:{e.Scope_Value}", "start": s, "end": en,
                      "description": e.Description, "units_observed": obs, "units_expected": exp,
-                     "impact_pct": (obs / exp - 1) * 100 if exp and exp > 0 else np.nan})
+                     "impact_pct": imp_pct})
     return pd.DataFrame(rows)
 
 

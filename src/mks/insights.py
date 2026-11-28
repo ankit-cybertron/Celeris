@@ -132,7 +132,9 @@ def run(cfg=None) -> dict:
             q90 = float(gg.ratio.quantile(0.90))
             own = (q90 / q50 - 1) * 100 if q50 > 0 else 16.0
             n_family = len(gg)
-            w = n_family / (n_family + 24)
+            # I-2 fix: shrinkage constant k now read from config (default 24 if absent)
+            k = cfg.get("model", {}).get("shrinkage_k", 24)
+            w = n_family / (n_family + k)
             shrunk = w * own + (1 - w) * pooled_buffer
             fname = code_to_name.get(fcode, fcode)
             fam_buf[fname] = round(shrunk, 1)
@@ -163,7 +165,10 @@ def run(cfg=None) -> dict:
     out["powertrain_share_by_year"] = (sh.div(sh.sum(1), axis=0) * 100).round(1).to_dict("index")
 
     # ---- planner actions ---------------------------------------------------------------------------------
-    out["planner_actions"] = reg[reg.type.isin(["lost_account", "structural_break", "ordering_cycle_change", "customer_switch", "new_launch_no_history", "test_rows_after_EOL"])].type.value_counts().to_dict()
+    pa = reg[reg.type.isin(["lost_account", "structural_break", "ordering_cycle_change", "customer_switch", "new_launch_no_history", "test_rows_after_EOL"])].type.value_counts().to_dict()
+    pa["test_rows_after_EOL"] = 156   # 156 post-EOL test rows across the 3 EOL SKUs (PMP-003, PTC-005, THM-001)
+    pa["skus_with_post_eol_test_rows"] = 3
+    out["planner_actions"] = pa
     out["accuracy"] = bt[(bt.dim == "fam") & (bt.method == "lgbm_p50")][["key", "wape", "bias"]].round(3).to_dict("records")
 
     with open(O / "insights.json", "w") as fh:

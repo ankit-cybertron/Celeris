@@ -3,6 +3,7 @@ copy of the series matrix truncated after the origin; truth for scoring comes fr
 from __future__ import annotations
 import numpy as np
 import pandas as pd
+from pathlib import Path
 from .config import load_config
 from . import data, features as F, models as M
 from .data import HORIZON, N_HIST, midx
@@ -17,6 +18,16 @@ def wape(a, p) -> float:
 
 def bias(a, p) -> float:
     return float(np.sum(p) / max(np.sum(a), 1e-9) - 1)
+
+
+def mae(a, p) -> float:
+    a, p = np.asarray(a, float), np.asarray(p, float)
+    return float(np.abs(a - p).mean())
+
+
+def rmse(a, p) -> float:
+    a, p = np.asarray(a, float), np.asarray(p, float)
+    return float(np.sqrt(np.mean((a - p) ** 2)))
 
 
 def model_matrices(cfg):
@@ -46,15 +57,15 @@ def run(cfg=None, fast: bool = False):
         ctx = F.Ctx(Yo, keys, macro, events, sku)
         train = F.training_frame(ctx, o, cfg["model"]["train_origin_start"], step)
         X = F.feature_columns(train)
-        last = oi == len(origins) - 1
-        mods = M.fit_all(train, X, cfg, with_quantiles=last)
+        # B-2 fix: fit quantile models at EVERY origin (not just the last) so coverage
+        # statistics are available for all holdout windows, not just one single holdout.
+        mods = M.fit_all(train, X, cfg, with_quantiles=True)
         te = F.build(ctx, o, range(1, HORIZON + 1), with_y=False)
         te["y"] = Yt[te.sid.to_numpy(), te.tm.to_numpy()]            # truth from untouched matrix
         te = te[(te.tm < N_HIST) & te.y.notna() & te.m12.notna()].copy()
         pr = M.predict_all(mods, te, X)
         te["lgbm_p50"] = pr.p50
-        if last:
-            te["lgbm_p10"], te["lgbm_p90"] = pr.p10, pr.p90
+        te["lgbm_p10"], te["lgbm_p90"] = pr.p10, pr.p90
         te["snaive"] = M.baseline_seasonal_naive(te)
         te["lvl_season"] = M.baseline_level_x_season(te)
         te["tsb"] = M.tsb_forecast(Yo, o)[te.sid.to_numpy()]
@@ -76,13 +87,30 @@ def metrics(bt: pd.DataFrame, outdir) -> None:
     rows = []
     for o, g in list(bt.groupby("origin")) + [("all", bt)]:
         for m in methods:
-            rows.append({"origin": o if o == "all" else data.mlabel(o), "method": m, "wape": wape(g.y, g[m]), "bias": bias(g.y, g[m]), "n": len(g)})
+            rows.append({
+                "origin": o if o == "all" else data.mlabel(o),
+                "method": m,
+                "wape": wape(g.y, g[m]),
+                "bias": bias(g.y, g[m]),
+                "mae": mae(g.y, g[m]),
+                "rmse": rmse(g.y, g[m]),
+                "n": len(g)
+            })
     pd.DataFrame(rows).to_csv(outdir / "metrics_overall.csv", index=False)
     rows = []
     for dim in ("h", "fam", "Region", "Sales_Channel"):
         for key, g in bt.groupby(dim):
             for m in methods:
-                rows.append({"dim": dim, "key": key, "method": m, "wape": wape(g.y, g[m]), "bias": bias(g.y, g[m]), "n": len(g)})
+                rows.append({
+                    "dim": dim,
+                    "key": key,
+                    "method": m,
+                    "wape": wape(g.y, g[m]),
+                    "bias": bias(g.y, g[m]),
+                    "mae": mae(g.y, g[m]),
+                    "rmse": rmse(g.y, g[m]),
+                    "n": len(g)
+                })
     pd.DataFrame(rows).to_csv(outdir / "metrics_by_dim.csv", index=False)
     last = bt[bt.origin == bt.origin.max()]
     cov = {"p10_below": float((last.y < last.lgbm_p10).mean()), "p90_above": float((last.y > last.lgbm_p90).mean()),

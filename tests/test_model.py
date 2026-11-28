@@ -39,3 +39,36 @@ def test_features_have_no_lookahead():
     b = F.build(_ctx(Y2), o, range(1, 7), with_y=False)
     cols = [c for c in F.feature_columns(a)]
     pd.testing.assert_frame_equal(a[cols], b[cols])
+
+
+def test_since_nz_handles_all_zero_and_nan():
+    # Series 0: all zeros; Series 1: all NaNs; Series 2: recent demand at t=23 (0 steps back)
+    w = 24
+    Y = np.zeros((3, T_ALL))
+    Y[1, :] = np.nan
+    Y[2, 23] = 100.0
+    f, _, _ = F._stats(_ctx(Y), 23)
+    assert np.isnan(f["since_nz"][0]), "All-zero series since_nz should be NaN, not -1"
+    assert np.isnan(f["since_nz"][1]), "All-NaN series since_nz should be NaN, not -1"
+    assert f["since_nz"][2] == 0.0, "Recent nonzero demand should have steps_from_end = 0"
+
+
+def test_estimate_unconstrained_guards_zero_shipped_month():
+    # If a month in a supply constraint window had 0 shipped on all listed rows,
+    # fill is NaN / skipped rather than forcing a 3x uplift on unlisted rows.
+    events = pd.DataFrame([{
+        "Event_Type": "Supply Constraint", "Scope_Type": "Product_Family", "Scope_Value": "FAM_A",
+        "Start_Date": "2021-01", "End_Date": "2021-03", "Description": "Test"
+    }])
+    panel = pd.DataFrame([
+        {"Date": "2021-01", "Product_Family": "FAM_A", "Requested_Units": 100.0, "Units_Clean": 0.0},
+        {"Date": "2021-01", "Product_Family": "FAM_A", "Requested_Units": np.nan, "Units_Clean": 50.0},
+        {"Date": "2021-01", "Product_Family": "FAM_A", "Requested_Units": np.nan, "Units_Clean": 0.0},
+    ])
+    panel["Demand_Unconstrained"] = np.where(panel.Requested_Units.notna(), panel.Requested_Units, panel.Units_Clean)
+    res = demand.estimate_unconstrained(panel, events)
+    # The positive unlisted row should NOT be inflated by 3x when listed shipments were 0
+    assert res.loc[1, "Demand_Source"] == "observed_shipped"
+    assert res.loc[1, "Demand_Unconstrained"] == 50.0
+    # The zero unlisted row in the window is marked as estimated_zero_stockout
+    assert res.loc[2, "Demand_Source"] == "estimated_zero_stockout"

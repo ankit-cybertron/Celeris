@@ -1,76 +1,76 @@
 {
  "headline": {
   "last12_units": 1706550.0,
-  "next12_units": 1753110.9839915708,
-  "total19_units": 2738797.795292237,
+  "next12_units": 1754395.3252928744,
+  "total19_units": 2740566.3803909956,
   "last12_revenue": 1451781457.52,
-  "next12_revenue": 1561502880.5952218,
-  "total19_revenue": 2467238640.934576,
-  "units_growth_pct": 2.728369165367006,
-  "revenue_growth_pct": 7.557709358173859
+  "next12_revenue": 1563433027.2178946,
+  "total19_revenue": 2469384508.9330964,
+  "units_growth_pct": 2.8036286831838675,
+  "revenue_growth_pct": 7.69065957686379
  },
  "outlook_Product_Family": [
   {
    "Product_Family": "Brake & Safety Systems",
    "last12_units": 320215.0,
-   "next12_units": 330253.6,
-   "units_%": 3.1,
+   "next12_units": 328912.7,
+   "units_%": 2.7,
    "last12_rev": 165076310.3,
-   "next12_rev": 177255469.1,
-   "rev_%": 7.4
+   "next12_rev": 176526761.3,
+   "rev_%": 6.9
   },
   {
    "Product_Family": "Chassis & Structural",
    "last12_units": 261963.0,
-   "next12_units": 268404.7,
-   "units_%": 2.5,
+   "next12_units": 268918.6,
+   "units_%": 2.7,
    "last12_rev": 152830448.9,
-   "next12_rev": 164716158.3,
-   "rev_%": 7.8
+   "next12_rev": 165064530.6,
+   "rev_%": 8.0
   },
   {
    "Product_Family": "Electrical Assemblies",
    "last12_units": 171777.0,
-   "next12_units": 180146.4,
-   "units_%": 4.9,
+   "next12_units": 180604.4,
+   "units_%": 5.1,
    "last12_rev": 250092209.0,
-   "next12_rev": 276884187.8,
-   "rev_%": 10.7
+   "next12_rev": 277510204.4,
+   "rev_%": 11.0
   },
   {
    "Product_Family": "Hydraulic Systems",
    "last12_units": 203321.0,
-   "next12_units": 210984.4,
-   "units_%": 3.8,
+   "next12_units": 212019.5,
+   "units_%": 4.3,
    "last12_rev": 194880286.5,
-   "next12_rev": 210528518.2,
-   "rev_%": 8.0
+   "next12_rev": 211681314.0,
+   "rev_%": 8.6
   },
   {
    "Product_Family": "Powertrain Components",
    "last12_units": 227990.0,
-   "next12_units": 226457.1,
-   "units_%": -0.7,
+   "next12_units": 226172.0,
+   "units_%": -0.8,
    "last12_rev": 258903668.7,
-   "next12_rev": 267452766.6,
+   "next12_rev": 267339618.7,
    "rev_%": 3.3
   },
   {
    "Product_Family": "Precision Machined Parts",
    "last12_units": 263631.0,
-   "next12_units": 270437.8,
-   "units_%": 2.6,
+   "next12_units": 271321.0,
+   "units_%": 2.9,
    "last12_rev": 204421351.1,
-   "next12_rev": 219738638.8,
-   "rev_%": 7.5
+   "next12_rev": 220357935.2,
+   "rev_%": 7.8
   },
   {
    "Product_Family": "Thermal Management",
    "last12_units": 257653.0,
-   "next12_units": 266426.9,
+   "next12_units": 266447.4,
    "units_%": 3.4,
    "last12_rev": 225577183.0,
-   "next12_rev": 244927141.9,
+   "next12_rev": 244952663.2,
    "rev_%": 8.6
   }
  ],
@@ -78,94 +78,94 @@
   {
    "Region": "Asia Pacific",
    "last12_units": 312607.0,
-   "next12_units": 318113.3,
-   "units_%": 1.8,
+   "next12_units": 318446.5,
+   "units_%": 1.9,
    "last12_rev": 268313005.3,
-   "next12_rev": 286507967.6,
-   "rev_%": 6.8
+   "next12_rev": 286921706.5,
+   "rev_%": 6.9
   },
   {
    "Region": "Europe",
    "last12_units": 324189.0,
-   "next12_units": 334532.8,
-   "units_%": 3.2,
+   "next12_units": 335127.6,
+   "units_%": 3.4,
    "last12_rev": 279005829.8,
-   "next12_rev": 300830398.4,
-   "rev_%": 7.8
+   "next12_rev": 301800441.7,
+   "rev_%": 8.2
   },
   {
    "Region": "India",
    "last12_units": 313334.0,
-   "next12_units": 320889.0,
-   "units_%": 2.4,
+   "next12_units": 320652.9,
+   "units_%": 2.3,
    "last12_rev": 263519650.3,
-   "next12_rev": 282105965.5,
-   "rev_%": 7.1
+   "next12_rev": 281934932.4,
+   "rev_%": 7.0
   },
   {
    "Region": "Latin America",
    "last12_units": 277761.0,
-   "next12_units": 287491.0,
-   "units_%": 3.5,
+   "next12_units": 287707.4,
+   "units_%": 3.6,
    "last12_rev": 239084165.7,
-   "next12_rev": 258073751.4,
-   "rev_%": 7.9
+   "next12_rev": 258150441.2,
+   "rev_%": 8.0
   },
   {
    "Region": "Middle East & Africa",
    "last12_units": 155664.0,
-   "next12_units": 162276.0,
-   "units_%": 4.2,
+   "next12_units": 162574.6,
+   "units_%": 4.4,
    "last12_rev": 131432031.3,
-   "next12_rev": 143202151.2,
-   "rev_%": 9.0
+   "next12_rev": 143735864.1,
+   "rev_%": 9.4
   },
   {
    "Region": "North America",
    "last12_units": 322995.0,
-   "next12_units": 329808.9,
+   "next12_units": 329886.2,
    "units_%": 2.1,
    "last12_rev": 270426775.1,
-   "next12_rev": 290782646.5,
-   "rev_%": 7.5
+   "next12_rev": 290889641.3,
+   "rev_%": 7.6
   }
  ],
  "outlook_Sales_Channel": [
   {
    "Sales_Channel": "Aftermarket",
    "last12_units": 267449.0,
-   "next12_units": 278409.2,
+   "next12_units": 278409.4,
    "units_%": 4.1,
    "last12_rev": 222365196.3,
-   "next12_rev": 241927491.5,
-   "rev_%": 8.8
+   "next12_rev": 242083664.9,
+   "rev_%": 8.9
   },
   {
    "Sales_Channel": "Direct OEM",
    "last12_units": 699024.0,
-   "next12_units": 713828.3,
+   "next12_units": 714047.1,
    "units_%": 2.1,
    "last12_rev": 597560717.5,
-   "next12_rev": 639980019.4,
-   "rev_%": 7.1
+   "next12_rev": 640659889.6,
+   "rev_%": 7.2
   },
   {
    "Sales_Channel": "Export",
    "last12_units": 190010.0,
-   "next12_units": 197677.5,
-   "units_%": 4.0,
+   "next12_units": 197760.7,
+   "units_%": 4.1,
    "last12_rev": 160995620.1,
-   "next12_rev": 174927174.2,
+   "next12_rev": 175050240.6,
    "rev_%": 8.7
   },
   {
    "Sales_Channel": "Tier-1 Distributor",
    "last12_units": 550067.0,
-   "next12_units": 563196.0,
-   "units_%": 2.4,
+   "next12_units": 564178.1,
+   "units_%": 2.6,
    "last12_rev": 470859923.6,
-   "next12_rev": 504668195.5,
-   "rev_%": 7.2
+   "next12_rev": 505639232.2,
+   "rev_%": 7.4
   }
  ],
  "top_growth": [
@@ -173,65 +173,65 @@
    "SKU_ID": "THM-062",
    "Region": "India",
    "last12": 1112.0,
-   "next12": 1398.3,
-   "delta": 286.3,
-   "pct": 25.7
+   "next12": 1415.5,
+   "delta": 303.5,
+   "pct": 27.3
   },
   {
-   "SKU_ID": "PMP-073",
+   "SKU_ID": "CSS-013",
    "Region": "North America",
-   "last12": 715.0,
-   "next12": 968.4,
-   "delta": 253.4,
-   "pct": 35.4
+   "last12": 1280.0,
+   "next12": 1517.4,
+   "delta": 237.4,
+   "pct": 18.5
   },
   {
    "SKU_ID": "THM-030",
    "Region": "India",
    "last12": 684.0,
-   "next12": 915.3,
-   "delta": 231.3,
+   "next12": 915.5,
+   "delta": 231.5,
    "pct": 33.8
   },
   {
    "SKU_ID": "CSS-012",
    "Region": "Europe",
    "last12": 833.0,
-   "next12": 1063.9,
-   "delta": 230.9,
-   "pct": 27.7
+   "next12": 1063.0,
+   "delta": 230.0,
+   "pct": 27.6
   },
   {
-   "SKU_ID": "THM-061",
-   "Region": "Asia Pacific",
-   "last12": 545.0,
-   "next12": 773.2,
-   "delta": 228.2,
-   "pct": 41.9
-  },
-  {
-   "SKU_ID": "THM-079",
+   "SKU_ID": "PMP-073",
    "Region": "North America",
-   "last12": 875.0,
-   "next12": 1085.9,
-   "delta": 210.9,
-   "pct": 24.1
+   "last12": 715.0,
+   "next12": 944.1,
+   "delta": 229.1,
+   "pct": 32.0
   },
   {
-   "SKU_ID": "CSS-080",
-   "Region": "Latin America",
-   "last12": 609.0,
-   "next12": 811.7,
-   "delta": 202.7,
-   "pct": 33.3
+   "SKU_ID": "BSS-068",
+   "Region": "Asia Pacific",
+   "last12": 1068.0,
+   "next12": 1287.5,
+   "delta": 219.5,
+   "pct": 20.6
   },
   {
-   "SKU_ID": "THM-061",
-   "Region": "India",
-   "last12": 758.0,
-   "next12": 960.0,
-   "delta": 202.0,
-   "pct": 26.7
+   "SKU_ID": "THM-057",
+   "Region": "Europe",
+   "last12": 1072.0,
+   "next12": 1291.3,
+   "delta": 219.3,
+   "pct": 20.5
+  },
+  {
+   "SKU_ID": "PMP-072",
+   "Region": "Middle East & Africa",
+   "last12": 620.0,
+   "next12": 829.8,
+   "delta": 209.8,
+   "pct": 33.8
   }
  ],
  "top_decline": [
@@ -239,65 +239,65 @@
    "SKU_ID": "BSS-008",
    "Region": "North America",
    "last12": 3577.0,
-   "next12": 2495.6,
-   "delta": -1081.4,
-   "pct": -30.2
+   "next12": 2441.2,
+   "delta": -1135.8,
+   "pct": -31.8
   },
   {
    "SKU_ID": "PTC-021",
    "Region": "India",
    "last12": 3354.0,
-   "next12": 2449.5,
-   "delta": -904.5,
-   "pct": -27.0
+   "next12": 2399.6,
+   "delta": -954.4,
+   "pct": -28.5
   },
   {
    "SKU_ID": "PTC-005",
    "Region": "North America",
    "last12": 1108.0,
-   "next12": 375.3,
-   "delta": -732.7,
-   "pct": -66.1
+   "next12": 393.1,
+   "delta": -714.9,
+   "pct": -64.5
   },
   {
    "SKU_ID": "PMP-005",
    "Region": "North America",
    "last12": 3646.0,
-   "next12": 2916.9,
-   "delta": -729.1,
-   "pct": -20.0
+   "next12": 2955.8,
+   "delta": -690.2,
+   "pct": -18.9
   },
   {
    "SKU_ID": "PTC-005",
    "Region": "India",
    "last12": 919.0,
-   "next12": 325.4,
-   "delta": -593.6,
-   "pct": -64.6
+   "next12": 338.9,
+   "delta": -580.1,
+   "pct": -63.1
   },
   {
    "SKU_ID": "PMP-003",
    "Region": "Asia Pacific",
    "last12": 972.0,
-   "next12": 443.9,
-   "delta": -528.1,
-   "pct": -54.3
+   "next12": 441.5,
+   "delta": -530.5,
+   "pct": -54.6
   },
   {
    "SKU_ID": "PMP-003",
    "Region": "India",
    "last12": 1057.0,
-   "next12": 550.2,
-   "delta": -506.8,
-   "pct": -47.9
+   "next12": 558.5,
+   "delta": -498.5,
+   "pct": -47.2
   },
   {
-   "SKU_ID": "PTC-005",
+   "SKU_ID": "PTC-021",
    "Region": "Asia Pacific",
-   "last12": 658.0,
-   "next12": 153.9,
-   "delta": -504.1,
-   "pct": -76.6
+   "last12": 2625.0,
+   "next12": 2128.1,
+   "delta": -496.9,
+   "pct": -18.9
   }
  ],
  "season_index": {
@@ -343,65 +343,65 @@
   }
  },
  "price_effect": {
-  "weighted_price_change_pct": 5.382963857210621,
+  "weighted_price_change_pct": 5.37926769615118,
   "note": "revenue growth minus units growth over the 19 months comes from announced January rises in the events calendar"
  },
  "p90_buffer_leaf_pct_by_family": {
-  "Brake & Safety Systems": 45.6,
-  "Chassis & Structural": 46.5,
-  "Electrical Assemblies": 47.3,
-  "Hydraulic Systems": 47.3,
-  "Powertrain Components": 46.1,
-  "Precision Machined Parts": 45.6,
-  "Thermal Management": 44.4
+  "Brake & Safety Systems": 45.8,
+  "Chassis & Structural": 46.8,
+  "Electrical Assemblies": 46.9,
+  "Hydraulic Systems": 47.0,
+  "Powertrain Components": 47.5,
+  "Precision Machined Parts": 45.8,
+  "Thermal Management": 44.7
  },
  "p90_buffer_pct_by_family": {
-  "Brake & Safety Systems": 15.1,
-  "Chassis & Structural": 15.2,
-  "Electrical Assemblies": 26.9,
-  "Hydraulic Systems": 27.3,
-  "Precision Machined Parts": 20.1,
-  "Powertrain Components": 15.6,
-  "Thermal Management": 16.2
+  "Brake & Safety Systems": 16.2,
+  "Chassis & Structural": 15.7,
+  "Electrical Assemblies": 28.4,
+  "Hydraulic Systems": 28.2,
+  "Precision Machined Parts": 20.7,
+  "Powertrain Components": 16.1,
+  "Thermal Management": 17.1
  },
  "p90_buffer_family_detail": {
   "Brake & Safety Systems": {
-   "raw": 12.1,
-   "shrunk": 15.1,
+   "raw": 13.5,
+   "shrunk": 16.2,
    "n": 38
   },
   "Chassis & Structural": {
-   "raw": 12.3,
-   "shrunk": 15.2,
+   "raw": 12.7,
+   "shrunk": 15.7,
    "n": 38
   },
   "Electrical Assemblies": {
-   "raw": 31.4,
-   "shrunk": 26.9,
+   "raw": 33.3,
+   "shrunk": 28.4,
    "n": 38
   },
   "Hydraulic Systems": {
-   "raw": 32.0,
-   "shrunk": 27.3,
+   "raw": 33.1,
+   "shrunk": 28.2,
    "n": 38
   },
   "Precision Machined Parts": {
-   "raw": 20.3,
-   "shrunk": 20.1,
+   "raw": 20.8,
+   "shrunk": 20.7,
    "n": 38
   },
   "Powertrain Components": {
-   "raw": 12.9,
-   "shrunk": 15.6,
+   "raw": 13.3,
+   "shrunk": 16.1,
    "n": 38
   },
   "Thermal Management": {
-   "raw": 14.0,
-   "shrunk": 16.2,
+   "raw": 14.9,
+   "shrunk": 17.1,
    "n": 38
   }
  },
- "p90_buffer_pooled_pct": 19.8,
+ "p90_buffer_pooled_pct": 20.6,
  "lifecycle": [
   {
    "SKU_ID": "PMP-003",
@@ -409,7 +409,7 @@
    "launch": "2018-12",
    "eol": "2027-08",
    "replaces": "",
-   "forecast_units_19m": 1892.3922295608158
+   "forecast_units_19m": 1903.0173215864068
   },
   {
    "SKU_ID": "PMP-020",
@@ -425,7 +425,7 @@
    "launch": "2014-04",
    "eol": "2027-05",
    "replaces": "",
-   "forecast_units_19m": 1107.31462534668
+   "forecast_units_19m": 1154.1253436881225
   },
   {
    "SKU_ID": "PTC-029",
@@ -441,7 +441,7 @@
    "launch": "2015-08",
    "eol": "2027-12",
    "replaces": "",
-   "forecast_units_19m": 3713.5006099010443
+   "forecast_units_19m": 3653.6801199060947
   },
   {
    "SKU_ID": "THM-012",
@@ -557,44 +557,45 @@
   "ordering_cycle_change": 89,
   "customer_switch": 23,
   "lost_account": 16,
-  "test_rows_after_EOL": 3,
-  "new_launch_no_history": 3
+  "test_rows_after_EOL": 156,
+  "new_launch_no_history": 3,
+  "skus_with_post_eol_test_rows": 3
  },
  "accuracy": [
   {
    "key": "BSS",
-   "wape": 0.264,
-   "bias": -0.044
+   "wape": 0.265,
+   "bias": -0.049
   },
   {
    "key": "CSS",
-   "wape": 0.28,
-   "bias": -0.029
+   "wape": 0.281,
+   "bias": -0.028
   },
   {
    "key": "ELA",
-   "wape": 0.325,
-   "bias": 0.008
+   "wape": 0.329,
+   "bias": 0.012
   },
   {
    "key": "HYD",
    "wape": 0.304,
-   "bias": -0.039
+   "bias": -0.041
   },
   {
    "key": "PMP",
-   "wape": 0.288,
-   "bias": -0.037
+   "wape": 0.289,
+   "bias": -0.039
   },
   {
    "key": "PTC",
-   "wape": 0.282,
-   "bias": -0.016
+   "wape": 0.283,
+   "bias": -0.017
   },
   {
    "key": "THM",
    "wape": 0.279,
-   "bias": -0.068
+   "bias": -0.063
   }
  ]
 }

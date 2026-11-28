@@ -4,9 +4,9 @@ Every number below is computed from the pipeline outputs. Demand = unconstrained
 
 ## 1. Headline
 
-- Next 12 months (Nov-26 to Oct-27): **1.75M units** (+2.7% vs last 12 months, 1.71M) and **$1.56B revenue** (+7.6% vs $1.45B).
+- Next 12 months (Nov-26 to Oct-27): **1.75M units** (+2.8% vs last 12 months, 1.71M) and **$1.56B revenue** (+7.7% vs $1.45B).
 - 19-month plan: **2.74M units / $2.47B**.
-- Revenue grows faster than units by about 4.8 points: January price rises are in the plan (volume-weighted price effect +5.4% vs last known price).
+- Revenue grows faster than units by about 4.9 points: January price rises are in the plan (volume-weighted price effect +5.4% vs last known price).
 - Shape & Trajectory Dynamics: Winter 2025-26 was a demand-driven dip (not supply-driven; stockouts were under 0.3% of volume). The forecast returns toward the 2024 level because the model finds no growth driver in the flat macro paths. Mid-2027 to 2028 YoY of -2% to -8% is therefore the least-evidenced part of the plan; use it with the P10-P90 range.
 
 ## 2. Where the growth and decline are
@@ -15,48 +15,48 @@ Every number below is computed from the pipeline outputs. Demand = unconstrained
 
 | Family | Last 12m units | Next 12m units | Units % | Revenue % |
 |---|---:|---:|---:|---:|
-| Electrical Assemblies | 171.8K | 180.1K | +4.9% | +10.7% |
-| Hydraulic Systems | 203.3K | 211.0K | +3.8% | +8.0% |
+| Electrical Assemblies | 171.8K | 180.6K | +5.1% | +11.0% |
+| Hydraulic Systems | 203.3K | 212.0K | +4.3% | +8.6% |
 | Thermal Management | 257.7K | 266.4K | +3.4% | +8.6% |
-| Brake & Safety Systems | 320.2K | 330.3K | +3.1% | +7.4% |
-| Precision Machined Parts | 263.6K | 270.4K | +2.6% | +7.5% |
-| Chassis & Structural | 262.0K | 268.4K | +2.5% | +7.8% |
-| Powertrain Components | 228.0K | 226.5K | -0.7% | +3.3% |
+| Precision Machined Parts | 263.6K | 271.3K | +2.9% | +7.8% |
+| Brake & Safety Systems | 320.2K | 328.9K | +2.7% | +6.9% |
+| Chassis & Structural | 262.0K | 268.9K | +2.7% | +8.0% |
+| Powertrain Components | 228.0K | 226.2K | -0.8% | +3.3% |
 
 **By region** (next 12m vs last 12m)
 
 | Region | Last 12m units | Next 12m units | Units % | Revenue % |
 |---|---:|---:|---:|---:|
-| Middle East & Africa | 155.7K | 162.3K | +4.2% | +9.0% |
-| Latin America | 277.8K | 287.5K | +3.5% | +7.9% |
-| Europe | 324.2K | 334.5K | +3.2% | +7.8% |
-| India | 313.3K | 320.9K | +2.4% | +7.1% |
-| North America | 323.0K | 329.8K | +2.1% | +7.5% |
-| Asia Pacific | 312.6K | 318.1K | +1.8% | +6.8% |
+| Middle East & Africa | 155.7K | 162.6K | +4.4% | +9.4% |
+| Latin America | 277.8K | 287.7K | +3.6% | +8.0% |
+| Europe | 324.2K | 335.1K | +3.4% | +8.2% |
+| India | 313.3K | 320.7K | +2.3% | +7.0% |
+| North America | 323.0K | 329.9K | +2.1% | +7.6% |
+| Asia Pacific | 312.6K | 318.4K | +1.9% | +6.9% |
 
 **By channel** (next 12m vs last 12m)
 
 | Channel | Last 12m units | Next 12m units | Units % | Revenue % |
 |---|---:|---:|---:|---:|
-| Aftermarket | 267.4K | 278.4K | +4.1% | +8.8% |
-| Export | 190.0K | 197.7K | +4.0% | +8.7% |
-| Tier-1 Distributor | 550.1K | 563.2K | +2.4% | +7.2% |
-| Direct OEM | 699.0K | 713.8K | +2.1% | +7.1% |
+| Aftermarket | 267.4K | 278.4K | +4.1% | +8.9% |
+| Export | 190.0K | 197.8K | +4.1% | +8.7% |
+| Tier-1 Distributor | 550.1K | 564.2K | +2.6% | +7.4% |
+| Direct OEM | 699.0K | 714.0K | +2.1% | +7.2% |
 
 **Largest absolute movers (SKU-region, next 12m vs last 12m, last-12m ≥ 500 units)**
 
 | SKU | Region | Last 12m | Next 12m | Δ |
 |---|---|---:|---:|---:|
-| THM-062 | India | 1,112 | 1,398 | +286 |
-| PMP-073 | North America | 715 | 968 | +253 |
-| THM-030 | India | 684 | 915 | +231 |
-| CSS-012 | Europe | 833 | 1,064 | +231 |
-| THM-061 | Asia Pacific | 545 | 773 | +228 |
-| BSS-008 | North America | 3,577 | 2,496 | -1,081 |
-| PTC-021 | India | 3,354 | 2,450 | -904 |
-| PTC-005 | North America | 1,108 | 375 | -733 |
-| PMP-005 | North America | 3,646 | 2,917 | -729 |
-| PTC-005 | India | 919 | 325 | -594 |
+| THM-062 | India | 1,112 | 1,416 | +304 |
+| CSS-013 | North America | 1,280 | 1,517 | +237 |
+| THM-030 | India | 684 | 916 | +232 |
+| CSS-012 | Europe | 833 | 1,063 | +230 |
+| PMP-073 | North America | 715 | 944 | +229 |
+| BSS-008 | North America | 3,577 | 2,441 | -1,136 |
+| PTC-021 | India | 3,354 | 2,400 | -954 |
+| PTC-005 | North America | 1,108 | 393 | -715 |
+| PMP-005 | North America | 3,646 | 2,956 | -690 |
+| PTC-005 | India | 919 | 339 | -580 |
 
 ## 3. Seasonality and holidays (plan capacity around them)
 
@@ -72,17 +72,17 @@ Every number below is computed from the pipeline outputs. Demand = unconstrained
 
 ## 5. Risk and procurement
 
-- Portfolio P90 buffer above P50 by family (shrinkage toward the pooled buffer of 19.8%, w = n/(n+24), chosen constant): Brake & Safety Systems +15.1% (raw +12.1%, n=38), Chassis & Structural +15.2% (raw +12.3%, n=38), Electrical Assemblies +26.9% (raw +31.4%, n=38), Hydraulic Systems +27.3% (raw +32.0%, n=38), Precision Machined Parts +20.1% (raw +20.3%, n=38), Powertrain Components +15.6% (raw +12.9%, n=38), Thermal Management +16.2% (raw +14.0%, n=38).
-- Unhedged SKU-level safety stock buffer by family (leaf quantiles summed): Brake & Safety Systems +46%, Chassis & Structural +46%, Electrical Assemblies +47%, Hydraulic Systems +47%, Powertrain Components +46%, Precision Machined Parts +46%, Thermal Management +44%.
+- Portfolio P90 buffer above P50 by family (shrinkage toward the pooled buffer of 20.6%, w = n/(n+24), chosen constant): Brake & Safety Systems +16.2% (raw +13.5%, n=38), Chassis & Structural +15.7% (raw +12.7%, n=38), Electrical Assemblies +28.4% (raw +33.3%, n=38), Hydraulic Systems +28.2% (raw +33.1%, n=38), Precision Machined Parts +20.7% (raw +20.8%, n=38), Powertrain Components +16.1% (raw +13.3%, n=38), Thermal Management +17.1% (raw +14.9%, n=38).
+- Unhedged SKU-level safety stock buffer by family (leaf quantiles summed): Brake & Safety Systems +46%, Chassis & Structural +47%, Electrical Assemblies +47%, Hydraulic Systems +47%, Powertrain Components +48%, Precision Machined Parts +46%, Thermal Management +45%.
 - Key takeaway for planners: Order to P50 at portfolio level; add the +15% to +27% aggregate buffer for the family (+13.6% at portfolio level); only apply individual leaf P90 buffers (+44% to +47%) to critical single-source or long lead-time parts to prevent 4x inventory over-ordering.
 
 ## 6. Lifecycle transitions
 
-- **PMP-003** (EOL Announced): launch 2018-12, EOL 2027-08; 19-month forecast 1,892 units.
+- **PMP-003** (EOL Announced): launch 2018-12, EOL 2027-08; 19-month forecast 1,903 units.
 - **PMP-020** (Planned Launch): launch 2027-06, replaces PMP-003; 19-month forecast 1,901 units.
-- **PTC-005** (EOL Announced): launch 2014-04, EOL 2027-05; 19-month forecast 1,107 units.
+- **PTC-005** (EOL Announced): launch 2014-04, EOL 2027-05; 19-month forecast 1,154 units.
 - **PTC-029** (Planned Launch): launch 2027-03, replaces PTC-005; 19-month forecast 1,441 units.
-- **THM-001** (EOL Announced): launch 2015-08, EOL 2027-12; 19-month forecast 3,714 units.
+- **THM-001** (EOL Announced): launch 2015-08, EOL 2027-12; 19-month forecast 3,654 units.
 - **THM-012** (Planned Launch): launch 2027-10, replaces THM-001; 19-month forecast 905 units.
 
 ## 7. Macro drivers (which indicator leads which family)
