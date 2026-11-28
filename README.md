@@ -281,8 +281,8 @@ NaN / Null Values:                  0
 | Deliverable | Location | Description |
 |---|---|---|
 | **Official Submission** | [`submission.csv`](submission.csv) & [`outputs/submission.csv`](outputs/submission.csv) | Verified competition submission file (58,219 rows) |
-| **Comprehensive Forecast** | `data/processed/forecast_full.parquet` | Full $P_{10}, P_{50}, P_{90}$, and revenue projections |
-| **Data Quality Ledger** | `data/processed/dq_issues.csv` | 28 audited issue classes with row counts & actions |
+| **Comprehensive Forecast** | [`data/processed/forecast_full.parquet`](data/processed/forecast_full.parquet) | Full $P_{10}, P_{50}, P_{90}$, and revenue projections |
+| **Data Quality Ledger** | [`data/processed/dq_issues.csv`](data/processed/dq_issues.csv) | 28 audited issue classes with row counts & actions |
 | **Anomaly Register** | [`outputs/anomaly_register.csv`](outputs/anomaly_register.csv) | Granular categorization of errors vs genuine events |
 | **Event Impact Analysis** | [`outputs/event_impacts.csv`](outputs/event_impacts.csv) | Pre/post demand shocks for 52 logged events |
 | **Backtest Metrics** | [`outputs/backtest/metrics_overall.csv`](outputs/backtest/metrics_overall.csv) | Comparative WAPE, Bias, MAE, and RMSE across 5 models |
